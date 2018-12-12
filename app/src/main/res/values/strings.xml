@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">C/MIND Test</string>
+    <string name="source_news_item_button_website">WEBSITE</string>
 </resources>

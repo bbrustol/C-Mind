@@ -13,7 +13,7 @@
             android:theme="@style/AppTheme"
             android:name="com.bbrustol.cmindtest.ApplicationConfiguration">
 
-        <activity android:name=".NewsActivity">
+        <activity android:name=".presentation.news.NewsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
