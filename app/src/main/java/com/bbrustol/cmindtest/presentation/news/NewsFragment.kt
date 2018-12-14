@@ -7,25 +7,22 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bbrustol.cmindtest.BuildConfig
 import com.bbrustol.cmindtest.R
 import com.bbrustol.cmindtest.presentation.webview.webviewActivity
-
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.Disposable
+import kotlinx.android.synthetic.main.fragment_news.*
 import kotlinx.android.synthetic.main.fragment_news.view.*
 import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.debug
 import org.jetbrains.anko.warn
-
 import javax.inject.Inject
 
 val NEWS_FRAGMENT_TAG = NewsFragment::class.java.name
-
-private val TAG = NewsFragment::class.java.name
 
 fun newsFragment() = NewsFragment()
 
@@ -34,23 +31,31 @@ class NewsFragment : Fragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private val log = AnkoLogger(this.javaClass)
-
     private lateinit var viewModel: NewsViewModel
+
+    private val log = AnkoLogger(this.javaClass)
 
     private val newsAdapter by lazy { NewsAdapter() }
 
     private var newsWebviewDisposse: Disposable? = null
     private var newsItemRecyclerDisposse: Disposable? = null
 
+    //region private methods
     private val stateObserver = Observer<NewsState> { state ->
         state?.let {
             when (state) {
+                is InitState -> {
+                    showShimmer(viewModel.stateLiveData.value!!.isShimmer)
+                    log.debug { "init -> " + viewModel.stateLiveData.value!!.isShimmer }
+                }
                 is DefaultState -> {
+                    showShimmer(viewModel.stateLiveData.value!!.isShimmer)
+                    log.warn { "default -> " +  viewModel.stateLiveData.value!!.isShimmer }
                     newsAdapter.updateData(it.news.sources)
                 }
                 is ErrorState -> {
-                    log.warn { viewModel.stateLiveData.value }
+                    showShimmer(viewModel.stateLiveData.value!!.isShimmer)
+                    log.warn { "error -> " +  viewModel.stateLiveData.value!!.isShimmer }
                 }
             }
         }
@@ -71,16 +76,31 @@ class NewsFragment : Fragment() {
     private fun setupItemClick() {
         newsWebviewDisposse = newsAdapter.clickWebviewButtonEvent
             .subscribe {
-                Log.d(TAG,it)
+                log.debug { "on click link recycled (webview) -> %it"}
                 startActivity(webviewActivity().getLaunchingIntent(context,it))
             }
 
         newsItemRecyclerDisposse = newsAdapter.clickItemEvent
             .subscribe {
-                Log.d(TAG,it)
+                log.debug { "on click item recycled -> %it"}
             }
     }
 
+    private fun showShimmer (flag: Boolean) {
+        shimmer_view_container.apply {
+            if (flag) {
+                startShimmerAnimation()
+                visibility = View.VISIBLE
+            } else {
+                stopShimmerAnimation()
+                visibility = View.GONE
+            }
+        }
+    }
+
+    //endregion
+
+    //region override methods
     override fun onAttach(context: Context?) {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
@@ -99,6 +119,7 @@ class NewsFragment : Fragment() {
     }
     override fun onDestroy() {
         super.onDestroy()
+        rv_news.adapter = null
         dismissObeservers()
     }
 
@@ -112,4 +133,5 @@ class NewsFragment : Fragment() {
         initializeRecyclerView(view)
         return view
     }
+    //endregion
 }

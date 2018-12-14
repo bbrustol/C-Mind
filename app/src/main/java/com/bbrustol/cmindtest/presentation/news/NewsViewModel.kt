@@ -3,15 +3,14 @@ package com.bbrustol.cmindtest.presentation.news
 import android.annotation.SuppressLint
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import android.util.Log
 import com.bbrustol.cmindtest.data.model.NewsModel
 import com.bbrustol.cmindtest.data.model.NewsUseCases
-import com.bbrustol.cmindtest.data.model.SourcesModel
 import com.bbrustol.cmindtest.data.model.emptyNewsModel
 import com.bbrustol.cmindtest.di.SCHEDULER_IO
 import com.bbrustol.cmindtest.di.SCHEDULER_MAIN_THREAD
 import io.reactivex.Scheduler
 import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.debug
 import org.jetbrains.anko.warn
 import javax.inject.Inject
 import javax.inject.Named
@@ -24,40 +23,31 @@ class NewsViewModel
 ) val observeOnScheduler: Scheduler) : ViewModel() {
 
     private val log = AnkoLogger(this.javaClass)
-    private var sources: ArrayList<SourcesModel> = arrayListOf()
 
     val stateLiveData =  MutableLiveData<NewsState>()
-    private var mBase = ""
 
     init {
-        stateLiveData.value = DefaultState(obtainCurrentData())
+        stateLiveData.value = InitState(obtainCurrentData(), true)
     }
 
-    fun updateBase(base: String) {
-        mBase = base
-    }
-
-    //region private methods
     @SuppressLint("CheckResult")
     fun getNews(apiKey: String) {
-        newsUseCases.getNews(mBase)
+        newsUseCases.getNews(apiKey)
             .subscribeOn(subscribeOnScheduler)
             .observeOn(observeOnScheduler)
             .subscribe(this::onSuccess, this::onError)
-
     }
 
+    //region private methods
     private fun onSuccess(news: NewsModel) {
-        Log.d("aaaa", news.toString())
-        stateLiveData.value = DefaultState(news)
+        log.debug { news.toString() }
+        stateLiveData.value = DefaultState(news, false)
     }
 
     private fun onError(error: Throwable) {
         log.warn { error.message }
-        stateLiveData.value = ErrorState(error.message ?: "",  obtainCurrentData())
+        stateLiveData.value = ErrorState(error.message ?: "",  obtainCurrentData(), false)
     }
-
-
 
     private fun obtainCurrentData() = stateLiveData.value?.news ?: emptyNewsModel
     //endregion
