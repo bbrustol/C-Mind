@@ -3,7 +3,6 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
-
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -84,7 +83,10 @@ dependencies {
     annotationProcessor "android.arch.lifecycle:compiler:${rootProject.ext.lifecycleVersion}"
 
     //anko
-    implementation 'org.jetbrains.anko:anko-commons:0.10.3'
+    implementation "org.jetbrains.anko:anko-commons:${rootProject.ext.ankoVersion}"
+
+    //shimmer
+    implementation "com.facebook.shimmer:shimmer:${rootProject.ext.shimmerVersion}"
 
     //tests
     testImplementation "junit:junit:${rootProject.ext.junitVersion}"

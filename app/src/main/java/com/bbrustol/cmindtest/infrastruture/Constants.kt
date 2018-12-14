@@ -1,10 +1,11 @@
 package com.bbrustol.cmindtest.infrastruture
 
-import java.util.Locale
+import java.util.*
 
 class Constants private constructor() {
     companion object {
         const val INSTANTIATING_NOT_ALLOWED = "Instantiating not allowed"
+        const val ARGUMENT_WEBVIEW_URL = "ARGUMENT_WEBVIEW_URL"
     }
 
     class AppLocale private constructor() {
