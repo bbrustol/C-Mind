@@ -9,7 +9,7 @@ import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import com.bbrustol.cmindtest.R
 import com.bbrustol.cmindtest.data.model.SourcesModel
-import kotlinx.android.synthetic.main.source_news_item.view.*
+import kotlinx.android.synthetic.main.item_source_news.view.*
 
 class NewsAdapter: RecyclerView.Adapter<ViewHolder>() {
 
@@ -33,7 +33,7 @@ class NewsAdapter: RecyclerView.Adapter<ViewHolder>() {
 
     // Inflates the item views
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.source_news_item, parent, false))
+        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_source_news, parent, false))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

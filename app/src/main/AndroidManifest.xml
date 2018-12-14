@@ -21,7 +21,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".presentation.webview.WebviewActivity"/>
+        <activity android:name=".presentation.webview.WebviewActivity"
+        android:theme="@style/AppThemeNoActionBar"/>
 
     </application>
 </manifest>

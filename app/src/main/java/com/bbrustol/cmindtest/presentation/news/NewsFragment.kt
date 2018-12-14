@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.bbrustol.cmindtest.BuildConfig
 import com.bbrustol.cmindtest.R
+import com.bbrustol.cmindtest.presentation.webview.webviewActivity
 
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.Disposable
@@ -60,12 +61,10 @@ class NewsFragment : Fragment() {
             layoutManager = LinearLayoutManager(context)
             adapter = newsAdapter
         }
-        setupItemClick()
     }
     private fun dismissObeservers() {
         newsWebviewDisposse?.dispose()
         newsItemRecyclerDisposse?.dispose()
-        viewModel.disposable?.dispose()
         viewModel.stateLiveData.removeObserver(stateObserver)
     }
 
@@ -73,6 +72,7 @@ class NewsFragment : Fragment() {
         newsWebviewDisposse = newsAdapter.clickWebviewButtonEvent
             .subscribe {
                 Log.d(TAG,it)
+                startActivity(webviewActivity().getLaunchingIntent(context,it))
             }
 
         newsItemRecyclerDisposse = newsAdapter.clickItemEvent
@@ -95,6 +95,7 @@ class NewsFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         viewModel.stateLiveData.observe(this, stateObserver)
+        setupItemClick()
     }
     override fun onDestroy() {
         super.onDestroy()

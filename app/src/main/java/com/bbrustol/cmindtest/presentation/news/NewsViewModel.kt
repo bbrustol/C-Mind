@@ -11,7 +11,6 @@ import com.bbrustol.cmindtest.data.model.emptyNewsModel
 import com.bbrustol.cmindtest.di.SCHEDULER_IO
 import com.bbrustol.cmindtest.di.SCHEDULER_MAIN_THREAD
 import io.reactivex.Scheduler
-import io.reactivex.disposables.Disposable
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.warn
 import javax.inject.Inject
@@ -28,7 +27,6 @@ class NewsViewModel
     private var sources: ArrayList<SourcesModel> = arrayListOf()
 
     val stateLiveData =  MutableLiveData<NewsState>()
-    var disposable: Disposable? = null
     private var mBase = ""
 
     init {

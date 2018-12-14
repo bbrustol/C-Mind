@@ -2,25 +2,26 @@ package com.bbrustol.cmindtest.presentation.webview
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import android.view.View
+import android.webkit.WebResourceError
+import android.webkit.WebResourceRequest
+import android.webkit.WebView
+import android.webkit.WebViewClient
+import android.widget.Toast
 import com.bbrustol.cmindtest.R
 import com.bbrustol.cmindtest.infrastruture.Constants
-import com.bbrustol.cmindtest.infrastruture.replaceFragment
 import dagger.android.AndroidInjection
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.support.HasSupportFragmentInjector
-import javax.inject.Inject
+import kotlinx.android.synthetic.main.activity_webview.*
 
-class WebviewActivity : AppCompatActivity(), HasSupportFragmentInjector {
-    @Inject
-    lateinit var fragmentInjector: DispatchingAndroidInjector<Fragment>
 
-    private val webviewFragment by lazy { webviewFragment() }
+fun webviewActivity() = WebviewActivity()
 
-    fun getLaunchingIntent(context: Context, url: String): Intent {
+class WebviewActivity : AppCompatActivity() {
+
+    fun getLaunchingIntent(context: Context?, url: String): Intent {
         val extras = Bundle()
         extras.putString(Constants.ARGUMENT_WEBVIEW_URL, url)
 
@@ -30,14 +31,52 @@ class WebviewActivity : AppCompatActivity(), HasSupportFragmentInjector {
         return intent
     }
 
-    override fun supportFragmentInjector(): AndroidInjector<Fragment> {
-        return fragmentInjector
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_general)
-        if (savedInstanceState == null) replaceFragment(R.id.framelayout_container, webviewFragment, WEBVIEW_FRAGMENT_TAG)
+        setContentView(R.layout.activity_webview)
+        init()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        webView.webViewClient = null
+        finish()
+    }
+
+    private fun init() {
+        toolbar.title = getString(R.string.app_name)
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+        toolbar.setNavigationOnClickListener { onBackPressed() }
+
+        startWebView()
+    }
+
+    private fun startWebView() {
+        loading.visibility = View.VISIBLE
+
+        webView.scrollBarStyle = View.SCROLLBARS_OUTSIDE_OVERLAY
+
+        webView.settings.builtInZoomControls = true
+        webView.settings.useWideViewPort = true
+        webView.settings.loadWithOverviewMode = true
+
+        webView.webViewClient = object : WebViewClient() {
+            override fun onPageFinished(view: WebView, url: String) {
+                loading.visibility = View.GONE
+            }
+
+            override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
+                super.onReceivedError(view, request, error)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    Toast.makeText(this@WebviewActivity, "Error: ${error.toString()}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+        webView.loadUrl(getArgumentUrl())
+    }
+
+    fun getArgumentUrl(): String {
+        return intent.getStringExtra(Constants.ARGUMENT_WEBVIEW_URL)
     }
 }
