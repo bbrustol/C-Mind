@@ -4,5 +4,5 @@ import com.bbrustol.cmindtest.data.model.NewsModel
 import io.reactivex.Single
 
 interface NewsRepository {
-    fun getNews(ApiKey:String): Single<NewsModel>
+    fun getNews(apiKey:String): Single<NewsModel>
 }

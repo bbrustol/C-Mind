@@ -8,7 +8,6 @@ import dagger.android.ActivityKey
 import dagger.android.AndroidInjector
 import dagger.multibindings.IntoMap
 
-
 @Module(subcomponents = [NewsActivitySubcomponent::class])
 abstract class NewsActivityModule {
     @Binds
