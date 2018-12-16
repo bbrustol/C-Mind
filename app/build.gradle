@@ -88,6 +88,11 @@ dependencies {
     //shimmer
     implementation "com.facebook.shimmer:shimmer:${rootProject.ext.shimmerVersion}"
 
+    //glide
+    implementation "com.github.bumptech.glide:glide:${rootProject.ext.glideVersion}"
+    annotationProcessor "com.github.bumptech.glide:compiler:${rootProject.ext.glideVersion}"
+
+
     //tests
     testImplementation "junit:junit:${rootProject.ext.junitVersion}"
     androidTestImplementation "com.android.support.test:runner:${rootProject.ext.testRunnerVersion}"

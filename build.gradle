@@ -40,6 +40,7 @@ ext {
     lifecycleVersion = '1.1.1'
     ankoVersion = '0.10.3'
     shimmerVersion = '0.1.0@aar'
+    glideVersion = '4.8.0'
 
     junitVersion = '4.12'
     testRunnerVersion = '1.0.2'

@@ -1,26 +1,20 @@
 package com.bbrustol.cmindtest.presentation.articles
 
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.SimpleItemAnimator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import io.reactivex.Observable
-import io.reactivex.subjects.PublishSubject
 import com.bbrustol.cmindtest.R
 import com.bbrustol.cmindtest.data.model.EverythingModel
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.item_everything_articles.view.*
 
 class ArticlesAdapter: RecyclerView.Adapter<ViewHolder>() {
 
     private var mArticlesList: ArrayList<EverythingModel> = arrayListOf()
     private lateinit var mRecyclerView: RecyclerView
-
-    private val clickWebviewButtonSubject = PublishSubject.create<String>()
-    val clickWebviewButtonEvent: Observable<String> = clickWebviewButtonSubject
-
-    private val clickItemSubject = PublishSubject.create<String>()
-    val clickItemEvent: Observable<String> = clickItemSubject
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
@@ -41,11 +35,23 @@ class ArticlesAdapter: RecyclerView.Adapter<ViewHolder>() {
         val articles = mArticlesList[position]
 
         holder.itemView.apply {
-            everything_articles_item_tv_title.text = articles.author
-            everything_articles_item_tv_description.text = articles.description
-        }
+            item_everything_articles_tv_title.text = articles.title
+            item_everything_articles_tv_description.text = articles.description
+            item_everything_articles_tv_author.text = articles.author
+            item_everything_articles_tv_date.text = articles.publishedAt
 
-        (mRecyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+
+            Glide.with(context)
+                .load(articles.urlToImage)
+                .apply(RequestOptions()
+                    .placeholder(R.drawable.ic_arrow_downward_black_24dp)
+                    .error(R.drawable.ic_error_black_48dp)
+                    .centerCrop()
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                )
+                .into(item_everything_articles_thumbnail)
+        }
     }
 
 

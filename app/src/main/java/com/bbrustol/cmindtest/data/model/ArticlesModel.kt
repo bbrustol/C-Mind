@@ -12,22 +12,22 @@ val emptyArticlesModel= ArticlesModel("", "", arrayListOf())
 
 @Parcelize
 data class ArticlesModel(
-                        val status: String,
-                        val totalResults: String,
-                        val articles: ArrayList<EverythingModel>) : Parcelable
+    val status: String,
+    val totalResults: String,
+    val articles: ArrayList<EverythingModel>) : Parcelable
 
 @Parcelize
 data class EverythingModel(
-                        val source: SourceArticleModel,
-                        val author: String,
-                        val title: String,
-                        val description: String,
-                        val url: String,
-                        val urlToImage: String,
-                        val publishedAt: String,
-                        val content: String) : Parcelable
+    val source: SourceArticleModel,
+    val author: String,
+    val title: String,
+    val description: String,
+    val url: String,
+    val urlToImage: String,
+    val publishedAt: String,
+    val content: String) : Parcelable
 
 @Parcelize
 data class SourceArticleModel (
-                        val id: String,
-                        val name: String):Parcelable
+    val id: String,
+    val name: String):Parcelable

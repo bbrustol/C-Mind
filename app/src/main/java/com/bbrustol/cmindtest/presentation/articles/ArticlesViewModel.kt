@@ -12,7 +12,6 @@ import io.reactivex.Scheduler
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.debug
 import org.jetbrains.anko.error
-import org.jetbrains.anko.warn
 import javax.inject.Inject
 import javax.inject.Named
 

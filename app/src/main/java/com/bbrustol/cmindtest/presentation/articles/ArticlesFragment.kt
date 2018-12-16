@@ -14,7 +14,6 @@ import com.bbrustol.cmindtest.BuildConfig
 import com.bbrustol.cmindtest.R
 import com.bbrustol.cmindtest.infrastruture.Constants
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.android.synthetic.main.fragment_articles.*
 import kotlinx.android.synthetic.main.fragment_articles.view.*
 import kotlinx.android.synthetic.main.include_shimmer.*
 import kotlinx.android.synthetic.main.include_toolbar.*
@@ -112,7 +111,7 @@ class ArticlesFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(ArticlesViewModel::class.java)
-        viewModel.getArticles(arguments?.getString(Constants.ARGUMENT_ARTICLE_ID, "vazio") ?: "", BuildConfig.API_KEY)
+        viewModel.getArticles(arguments?.getString(Constants.ARGUMENT_ARTICLE_ID, "") ?: "", BuildConfig.API_KEY)
     }
 
     override fun onResume() {
