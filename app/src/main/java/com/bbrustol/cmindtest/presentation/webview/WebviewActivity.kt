@@ -15,7 +15,7 @@ import com.bbrustol.cmindtest.R
 import com.bbrustol.cmindtest.infrastruture.Constants
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_webview.*
-
+import kotlinx.android.synthetic.main.include_toolbar.*
 
 fun webviewActivity() = WebviewActivity()
 
@@ -31,28 +31,12 @@ class WebviewActivity : AppCompatActivity() {
         return intent
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_webview)
-        init()
+    //region private methods
+    private fun getArgumentUrl(): String {
+        return intent.getStringExtra(Constants.ARGUMENT_WEBVIEW_URL)
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        webView.webViewClient = null
-        finish()
-    }
-
-    private fun init() {
-        toolbar.title = getString(R.string.app_name)
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
-        toolbar.setNavigationOnClickListener { onBackPressed() }
-
-        startWebView()
-    }
-
-    private fun startWebView() {
+    private fun configWebView() {
         loading.visibility = View.VISIBLE
 
         webView.scrollBarStyle = View.SCROLLBARS_OUTSIDE_OVERLAY
@@ -76,7 +60,25 @@ class WebviewActivity : AppCompatActivity() {
         webView.loadUrl(getArgumentUrl())
     }
 
-    fun getArgumentUrl(): String {
-        return intent.getStringExtra(Constants.ARGUMENT_WEBVIEW_URL)
+    private fun initToolbar() {
+        toolbar.title = getString(R.string.source_news_item_button_website)
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+        toolbar.setNavigationOnClickListener { onBackPressed() }
     }
+    //endregion
+
+    //region override methods
+    override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidInjection.inject(this)
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_webview)
+        initToolbar()
+        configWebView()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        webView.webViewClient = null
+    }
+    //endregion
 }

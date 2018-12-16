@@ -6,7 +6,7 @@ import dagger.Provides
 import retrofit2.Retrofit
 
 @Module
-class NewsBusiness: BaseBusiness() {
+class ArticlesBusiness: BaseBusiness() {
     @Provides
-    fun providesNewsApi(retrofit: Retrofit) = retrofit.create(Api::class.java)
+    fun providesArticlesApi(retrofit: Retrofit) = retrofit.create(Api::class.java)
 }

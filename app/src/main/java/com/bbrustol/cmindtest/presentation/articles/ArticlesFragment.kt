@@ -1,4 +1,4 @@
-package com.bbrustol.cmindtest.presentation.news
+package com.bbrustol.cmindtest.presentation.articles
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
@@ -12,82 +12,82 @@ import android.view.View
 import android.view.ViewGroup
 import com.bbrustol.cmindtest.BuildConfig
 import com.bbrustol.cmindtest.R
-import com.bbrustol.cmindtest.presentation.articles.articlesActivity
-import com.bbrustol.cmindtest.presentation.webview.webviewActivity
+import com.bbrustol.cmindtest.infrastruture.Constants
 import dagger.android.support.AndroidSupportInjection
-import io.reactivex.disposables.Disposable
-import kotlinx.android.synthetic.main.fragment_news.*
-import kotlinx.android.synthetic.main.fragment_news.view.*
+import kotlinx.android.synthetic.main.fragment_articles.*
+import kotlinx.android.synthetic.main.fragment_articles.view.*
 import kotlinx.android.synthetic.main.include_shimmer.*
+import kotlinx.android.synthetic.main.include_toolbar.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.debug
-import org.jetbrains.anko.error
 import org.jetbrains.anko.warn
 import javax.inject.Inject
 
-val NEWS_FRAGMENT_TAG = NewsFragment::class.java.name
+val ARTICLES_FRAGMENT_TAG = ArticlesFragment::class.java.name
 
-class NewsFragment : Fragment() {
+class ArticlesFragment : Fragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var viewModel: NewsViewModel
+    private lateinit var viewModel: ArticlesViewModel
 
     private val log = AnkoLogger(this.javaClass)
 
-    private val newsAdapter by lazy { NewsAdapter() }
+    private val articlesAdapter by lazy { ArticlesAdapter() }
 
     private var mView: View? = null
 
-    private var newsWebviewDisposse: Disposable? = null
-    private var newsItemRecyclerDisposse: Disposable? = null
+    fun newInstance(id: String): ArticlesFragment {
+        val fragment = ArticlesFragment()
+
+        val args = Bundle()
+        args.putString(Constants.ARGUMENT_ARTICLE_ID, id)
+        fragment.arguments = args
+
+        return fragment
+    }
 
     //region private methods
-    private val stateObserver = Observer<NewsState> { state ->
+    private val stateObserver = Observer<ArticlesState> { state ->
         state?.let {
             when (state) {
                 is InitState -> {
-                    showShimmer(viewModel.stateLiveData.value!!.isShimmer)
+                    showShimmer(it.isShimmer)
                     log.debug { "init -> " + viewModel.stateLiveData.value!!.isShimmer }
                 }
                 is DefaultState -> {
-                    showShimmer(viewModel.stateLiveData.value!!.isShimmer)
-                    log.warn { "default -> " +  viewModel.stateLiveData.value!!.isShimmer }
-                    newsAdapter.updateData(it.news.sources)
+                    showShimmer(it.isShimmer)
+                    log.warn { "default -> " +  it.articles.articles.first().source.name }
+                    configToolbar(it.articles.articles.first().source.name)
+                    articlesAdapter.updateData(it.articles.articles)
                 }
                 is ErrorState -> {
-                    showShimmer(viewModel.stateLiveData.value!!.isShimmer)
-                    log.error { "error -> " +  viewModel.stateLiveData.value }
+                    showShimmer(it.isShimmer)
+                    log.warn { "error -> " +  it.isShimmer }
                 }
             }
+        }
+    }
+
+    private fun configToolbar(title: String) {
+        toolbar.visibility = View.VISIBLE
+        toolbar.title = title
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+        toolbar.setNavigationOnClickListener {
+            activity?.finish()
         }
     }
 
     private fun initializeRecyclerView() {
-        mView?.rv_news?.apply {
+        mView?.rv_articles?.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = newsAdapter
+            adapter = articlesAdapter
         }
     }
+
     private fun dismissObeservers() {
-        newsWebviewDisposse?.dispose()
-        newsItemRecyclerDisposse?.dispose()
         viewModel.stateLiveData.removeObserver(stateObserver)
-    }
-
-    private fun setupItemClick() {
-        newsWebviewDisposse = newsAdapter.clickWebviewButtonEvent
-            .subscribe {
-                log.debug { "on click link recycled (webview) -> %it"}
-                startActivity(webviewActivity().getLaunchingIntent(context,it))
-            }
-
-        newsItemRecyclerDisposse = newsAdapter.clickItemEvent
-            .subscribe {
-                log.debug { "on click item recycled -> %it"}
-                startActivity(articlesActivity().getLaunchingIntent(context, it))
-            }
     }
 
     private fun showShimmer (flag: Boolean) {
@@ -101,7 +101,6 @@ class NewsFragment : Fragment() {
             }
         }
     }
-
     //endregion
 
     //region override methods
@@ -112,18 +111,17 @@ class NewsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(NewsViewModel::class.java)
-        viewModel.getNews(BuildConfig.API_KEY)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(ArticlesViewModel::class.java)
+        viewModel.getArticles(arguments?.getString(Constants.ARGUMENT_ARTICLE_ID, "vazio") ?: "", BuildConfig.API_KEY)
     }
 
     override fun onResume() {
         super.onResume()
         viewModel.stateLiveData.observe(this, stateObserver)
-        setupItemClick()
     }
     override fun onDestroy() {
         super.onDestroy()
-        mView?.rv_news?.adapter = null
+        mView?.rv_articles?.adapter = null
         dismissObeservers()
     }
 
@@ -133,7 +131,7 @@ class NewsFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        mView = inflater.inflate(R.layout.fragment_news, container, false)
+        mView = inflater.inflate(R.layout.fragment_articles, container, false)
         initializeRecyclerView()
         return mView
     }

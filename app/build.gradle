@@ -14,10 +14,10 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         buildConfigField("String", "ROUTER_URL", "\"https://newsapi.org/v2/\"")
-        buildConfigField("String", "SOURCES", "\"sources?\"")
-        buildConfigField("String", "EVERYTHING", "\"everything?\"")
-        buildConfigField("String", "TOP_HEADLINES", "\"top-headlines?\"")
-        buildConfigField("String", "NEWS_API_KEY", "\"eb8f3ef23e984c73b25f84a5e0ca00df\"")
+        buildConfigField("String", "SOURCES", "\"sources\"")
+        buildConfigField("String", "EVERYTHING", "\"everything\"")
+        buildConfigField("String", "TOP_HEADLINES", "\"top-headlines\"")
+        buildConfigField("String", "API_KEY", "\"eb8f3ef23e984c73b25f84a5e0ca00df\"")
         //sources=
         //from= to=->data
         //q= busca

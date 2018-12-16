@@ -1,6 +1,7 @@
 package com.bbrustol.cmindtest.di
 
 import android.arch.lifecycle.ViewModel
+import com.bbrustol.cmindtest.presentation.articles.ArticlesViewModel
 import com.bbrustol.cmindtest.presentation.news.NewsViewModel
 import dagger.Binds
 import dagger.MapKey
@@ -19,4 +20,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(NewsViewModel::class)
     abstract fun bindNewsViewModel(viewModel: NewsViewModel) : ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ArticlesViewModel::class)
+    abstract fun bindArticlesViewModel(viewModel: ArticlesViewModel) : ViewModel
 }
