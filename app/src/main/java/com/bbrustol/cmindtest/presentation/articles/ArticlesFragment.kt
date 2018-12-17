@@ -13,7 +13,9 @@ import android.view.ViewGroup
 import com.bbrustol.cmindtest.BuildConfig
 import com.bbrustol.cmindtest.R
 import com.bbrustol.cmindtest.infrastruture.Constants
+import com.bbrustol.cmindtest.presentation.webview.webviewActivity
 import dagger.android.support.AndroidSupportInjection
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_articles.view.*
 import kotlinx.android.synthetic.main.include_shimmer.*
 import kotlinx.android.synthetic.main.include_toolbar.*
@@ -34,6 +36,8 @@ class ArticlesFragment : Fragment() {
     private val log = AnkoLogger(this.javaClass)
 
     private val articlesAdapter by lazy { ArticlesAdapter() }
+
+    private var articlesWebviewDisposse: Disposable? = null
 
     private var mView: View? = null
 
@@ -86,6 +90,7 @@ class ArticlesFragment : Fragment() {
     }
 
     private fun dismissObeservers() {
+        articlesWebviewDisposse?.dispose()
         viewModel.stateLiveData.removeObserver(stateObserver)
     }
 
@@ -99,6 +104,14 @@ class ArticlesFragment : Fragment() {
                 visibility = View.GONE
             }
         }
+    }
+
+    private fun setupItemClick() {
+        articlesWebviewDisposse = articlesAdapter.clickWebviewButtonEvent
+            .subscribe {
+                log.debug { "on click link recycled (webview) -> %it"}
+                startActivity(webviewActivity().getLaunchingIntent(context,it))
+            }
     }
     //endregion
 
@@ -117,6 +130,7 @@ class ArticlesFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         viewModel.stateLiveData.observe(this, stateObserver)
+        setupItemClick()
     }
     override fun onDestroy() {
         super.onDestroy()

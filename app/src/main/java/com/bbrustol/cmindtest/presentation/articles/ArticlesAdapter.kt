@@ -9,12 +9,17 @@ import com.bbrustol.cmindtest.data.model.EverythingModel
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
+import io.reactivex.Observable
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.item_everything_articles.view.*
 
 class ArticlesAdapter: RecyclerView.Adapter<ViewHolder>() {
 
     private var mArticlesList: ArrayList<EverythingModel> = arrayListOf()
     private lateinit var mRecyclerView: RecyclerView
+
+    private val clickWebviewButtonSubject = PublishSubject.create<String>()
+    val clickWebviewButtonEvent: Observable<String> = clickWebviewButtonSubject
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
@@ -40,6 +45,9 @@ class ArticlesAdapter: RecyclerView.Adapter<ViewHolder>() {
             item_everything_articles_tv_author.text = articles.author
             item_everything_articles_tv_date.text = articles.publishedAt
 
+            setOnClickListener {
+                clickWebviewButtonSubject.onNext(articles.url)
+            }
 
             Glide.with(context)
                 .load(articles.urlToImage)

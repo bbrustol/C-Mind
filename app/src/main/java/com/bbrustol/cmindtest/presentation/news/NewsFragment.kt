@@ -16,7 +16,6 @@ import com.bbrustol.cmindtest.presentation.articles.articlesActivity
 import com.bbrustol.cmindtest.presentation.webview.webviewActivity
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.Disposable
-import kotlinx.android.synthetic.main.fragment_news.*
 import kotlinx.android.synthetic.main.fragment_news.view.*
 import kotlinx.android.synthetic.main.include_shimmer.*
 import org.jetbrains.anko.AnkoLogger
@@ -70,6 +69,7 @@ class NewsFragment : Fragment() {
             adapter = newsAdapter
         }
     }
+
     private fun dismissObeservers() {
         newsWebviewDisposse?.dispose()
         newsItemRecyclerDisposse?.dispose()
