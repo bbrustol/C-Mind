@@ -5,7 +5,6 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -13,18 +12,18 @@ import android.view.ViewGroup
 import com.bbrustol.cmindtest.BuildConfig
 import com.bbrustol.cmindtest.R
 import com.bbrustol.cmindtest.infrastruture.Constants
+import com.bbrustol.cmindtest.presentation.BaseFragment
 import com.bbrustol.cmindtest.presentation.webview.webviewActivity
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_articles.*
 import kotlinx.android.synthetic.main.fragment_articles.view.*
-import kotlinx.android.synthetic.main.include_shimmer.*
 import kotlinx.android.synthetic.main.include_toolbar.*
 import javax.inject.Inject
 
 val ARTICLES_FRAGMENT_TAG = ArticlesFragment::class.java.name
 
-class ArticlesFragment : Fragment() {
+class ArticlesFragment : BaseFragment() {
 
     @Inject
     lateinit var mViewModelFactory: ViewModelProvider.Factory
@@ -96,18 +95,6 @@ class ArticlesFragment : Fragment() {
     private fun dismissObeservers() {
         mArticlesWebviewDisposse?.dispose()
         mViewModel.stateLiveData.removeObserver(stateObserver)
-    }
-
-    private fun showShimmer (flag: Boolean) {
-        shimmer_view_container.apply {
-            if (flag) {
-                startShimmerAnimation()
-                visibility = View.VISIBLE
-            } else {
-                stopShimmerAnimation()
-                visibility = View.GONE
-            }
-        }
     }
 
     private fun setupItemClick() {

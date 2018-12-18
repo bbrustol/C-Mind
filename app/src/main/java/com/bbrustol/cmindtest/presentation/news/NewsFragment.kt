@@ -5,19 +5,18 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bbrustol.cmindtest.BuildConfig
 import com.bbrustol.cmindtest.R
+import com.bbrustol.cmindtest.presentation.BaseFragment
 import com.bbrustol.cmindtest.presentation.articles.articlesActivity
 import com.bbrustol.cmindtest.presentation.webview.webviewActivity
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_news.view.*
-import kotlinx.android.synthetic.main.include_shimmer.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.debug
 import org.jetbrains.anko.error
@@ -26,7 +25,7 @@ import javax.inject.Inject
 
 val NEWS_FRAGMENT_TAG = NewsFragment::class.java.name
 
-class NewsFragment : Fragment() {
+class NewsFragment : BaseFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -89,19 +88,6 @@ class NewsFragment : Fragment() {
                 startActivity(articlesActivity().getLaunchingIntent(context, it))
             }
     }
-
-    private fun showShimmer (flag: Boolean) {
-        shimmer_view_container.apply {
-            if (flag) {
-                startShimmerAnimation()
-                visibility = View.VISIBLE
-            } else {
-                stopShimmerAnimation()
-                visibility = View.GONE
-            }
-        }
-    }
-
     //endregion
 
     //region override methods

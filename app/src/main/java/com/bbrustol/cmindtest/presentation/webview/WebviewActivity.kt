@@ -13,7 +13,6 @@ import android.webkit.WebViewClient
 import android.widget.Toast
 import com.bbrustol.cmindtest.R
 import com.bbrustol.cmindtest.infrastruture.Constants
-import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_webview.*
 import kotlinx.android.synthetic.main.include_toolbar.*
 
@@ -69,7 +68,6 @@ class WebviewActivity : AppCompatActivity() {
 
     //region override methods
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_webview)
         initToolbar()
