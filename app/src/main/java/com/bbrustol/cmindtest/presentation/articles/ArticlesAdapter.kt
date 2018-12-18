@@ -1,5 +1,6 @@
 package com.bbrustol.cmindtest.presentation.articles
 
+import android.support.v4.widget.CircularProgressDrawable
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import com.bbrustol.cmindtest.R
 import com.bbrustol.cmindtest.data.model.EverythingModel
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
@@ -49,19 +51,26 @@ class ArticlesAdapter: RecyclerView.Adapter<ViewHolder>() {
                 clickWebviewButtonSubject.onNext(articles.url)
             }
 
+            //load image - 
+            val circularProgressDrawable = CircularProgressDrawable(context)
+            circularProgressDrawable.strokeWidth = 5f
+            circularProgressDrawable.centerRadius = 30f
+            circularProgressDrawable.start()
+
             Glide.with(context)
                 .load(articles.urlToImage)
                 .apply(RequestOptions()
-                    .placeholder(R.drawable.ic_arrow_downward_black_24dp)
-                    .error(R.drawable.ic_error_black_48dp)
+                    .placeholder(circularProgressDrawable)
+                    .error(R.drawable.ic_error_outline_black_24dp)
                     .centerCrop()
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .skipMemoryCache(true)
                 )
+                .transition(DrawableTransitionOptions.withCrossFade())
+
                 .into(item_everything_articles_thumbnail)
         }
     }
-
 
     fun updateData(
         newData: ArrayList<EverythingModel>
