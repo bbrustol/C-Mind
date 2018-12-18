@@ -41,7 +41,18 @@ class ArticlesViewModel
     //region private methods
     private fun onSuccess(articles: ArticlesModel) {
         log.debug { articles.toString() }
-        stateLiveData.value = DefaultState(articles, false)
+        increseArticles(articles)
+    }
+
+    private fun increseArticles(articles: ArticlesModel) {
+        if (articles.status == "ok") {
+            val articlesModelUpdate = stateLiveData.value?.articles
+            for (model in articles.articles.reversed()) {
+                articlesModelUpdate?.articles?.add(0, model)
+            }
+
+            stateLiveData.value = DefaultState(articlesModelUpdate!!, false)
+        }
     }
 
     private fun onError(error: Throwable) {
