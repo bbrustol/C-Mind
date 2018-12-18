@@ -22,7 +22,7 @@ class ArticlesActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     fun getLaunchingIntent(context: Context?, id: String): Intent {
         val extras = Bundle()
-        extras.putString(Constants.ARGUMENT_ARTICLE_ID, id)
+        extras.putString(Constants.ARGUMENT_ARTICLES_ID, id)
 
         val intent = Intent(context, ArticlesActivity::class.java)
         intent.putExtras(extras)
@@ -31,7 +31,7 @@ class ArticlesActivity : AppCompatActivity(), HasSupportFragmentInjector {
     }
 
     private fun getArgumentID(): String {
-        return intent.getStringExtra(Constants.ARGUMENT_ARTICLE_ID)
+        return intent.getStringExtra(Constants.ARGUMENT_ARTICLES_ID)
     }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {

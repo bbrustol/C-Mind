@@ -13,7 +13,7 @@ interface Api {
     fun getSources(@Query("apiKey")apiKey:String): Single<NewsModel>
 
     @GET(BuildConfig.EVERYTHING)
-    fun getEverything(@Query("sources") sources: String, @Query("apiKey")apiKey:String): Single<ArticlesModel>
+    fun getEverything(@Query("sources") sources: String, @Query("page")page: Int, @Query("apiKey")apiKey:String): Single<ArticlesModel>
 
     @GET(BuildConfig.TOP_HEADLINES)
     fun getTopHeadlines(@Query("apiKey")apiKey:String): Single<ArticlesModel>

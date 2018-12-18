@@ -31,8 +31,8 @@ class ArticlesViewModel
     }
 
     @SuppressLint("CheckResult")
-    fun getArticles(sources: String, apiKey: String) {
-        articlesUseCases.getArticles(sources, apiKey)
+    fun getArticles(sources: String, page: Int, apiKey: String) {
+        articlesUseCases.getArticles(sources, page, apiKey)
             .subscribeOn(subscribeOnScheduler)
             .observeOn(observeOnScheduler)
             .subscribe(this::onSuccess, this::onError)

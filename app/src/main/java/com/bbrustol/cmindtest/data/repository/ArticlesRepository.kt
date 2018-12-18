@@ -4,5 +4,5 @@ import com.bbrustol.cmindtest.data.model.ArticlesModel
 import io.reactivex.Single
 
 interface ArticlesRepository {
-    fun getArticles(sources:String, apiKey:String): Single<ArticlesModel>
+    fun getArticles(sources:String, page: Int, apiKey:String): Single<ArticlesModel>
 }

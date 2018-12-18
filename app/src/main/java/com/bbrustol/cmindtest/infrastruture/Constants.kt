@@ -6,7 +6,8 @@ class Constants private constructor() {
     companion object {
         const val INSTANTIATING_NOT_ALLOWED = "Instantiating not allowed"
         const val ARGUMENT_WEBVIEW_URL = "ARGUMENT_WEBVIEW_URL"
-        const val ARGUMENT_ARTICLE_ID = "ARGUMENT_ARTICLE_ID"
+        const val ARGUMENT_ARTICLES_ID = "ARGUMENT_ARTICLES_ID"
+        const val ARGUMENT_ARTICLES_PAGE = "ARGUMENT_ARTICLES_PAGE"
     }
 
     class AppLocale private constructor() {

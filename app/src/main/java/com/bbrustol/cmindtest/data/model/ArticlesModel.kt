@@ -5,7 +5,7 @@ import io.reactivex.Single
 import kotlinx.android.parcel.Parcelize
 
 interface ArticlesUseCases {
-    fun getArticles(sources: String, apiKey: String) : Single<ArticlesModel>
+    fun getArticles(sources: String, page: Int, apiKey1: String) : Single<ArticlesModel>
 }
 
 val emptyArticlesModel= ArticlesModel("", "", arrayListOf())

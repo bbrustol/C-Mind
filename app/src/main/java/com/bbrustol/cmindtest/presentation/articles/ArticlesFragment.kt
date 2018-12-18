@@ -16,12 +16,10 @@ import com.bbrustol.cmindtest.infrastruture.Constants
 import com.bbrustol.cmindtest.presentation.webview.webviewActivity
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.Disposable
+import kotlinx.android.synthetic.main.fragment_articles.*
 import kotlinx.android.synthetic.main.fragment_articles.view.*
 import kotlinx.android.synthetic.main.include_shimmer.*
 import kotlinx.android.synthetic.main.include_toolbar.*
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.debug
-import org.jetbrains.anko.warn
 import javax.inject.Inject
 
 val ARTICLES_FRAGMENT_TAG = ArticlesFragment::class.java.name
@@ -29,23 +27,24 @@ val ARTICLES_FRAGMENT_TAG = ArticlesFragment::class.java.name
 class ArticlesFragment : Fragment() {
 
     @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+    lateinit var mViewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var viewModel: ArticlesViewModel
+    private lateinit var mViewModel: ArticlesViewModel
 
-    private val log = AnkoLogger(this.javaClass)
+    private val mArticlesAdapter by lazy { ArticlesAdapter() }
 
-    private val articlesAdapter by lazy { ArticlesAdapter() }
-
-    private var articlesWebviewDisposse: Disposable? = null
+    private var mArticlesWebviewDisposse: Disposable? = null
 
     private var mView: View? = null
+    private var mPage = 1
+    private var mSavedBundle: Bundle? = null
+
 
     fun newInstance(id: String): ArticlesFragment {
         val fragment = ArticlesFragment()
 
         val args = Bundle()
-        args.putString(Constants.ARGUMENT_ARTICLE_ID, id)
+        args.putString(Constants.ARGUMENT_ARTICLES_ID, id)
         fragment.arguments = args
 
         return fragment
@@ -57,17 +56,16 @@ class ArticlesFragment : Fragment() {
             when (state) {
                 is InitState -> {
                     showShimmer(it.isShimmer)
-                    log.debug { "init -> " + viewModel.stateLiveData.value!!.isShimmer }
                 }
                 is DefaultState -> {
                     showShimmer(it.isShimmer)
-                    log.warn { "default -> " +  it.articles.articles.first().source.name }
                     configToolbar(it.articles.articles.first().source.name)
-                    articlesAdapter.updateData(it.articles.articles)
+                    mArticlesAdapter.updateData(it.articles.articles)
+                    swipe_refresh_layout_articles.isRefreshing = false
                 }
                 is ErrorState -> {
                     showShimmer(it.isShimmer)
-                    log.warn { "error -> " +  it.isShimmer }
+                    swipe_refresh_layout_articles.isRefreshing = false
                 }
             }
         }
@@ -78,20 +76,26 @@ class ArticlesFragment : Fragment() {
         toolbar.title = title
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
         toolbar.setNavigationOnClickListener {
+            mPage = 1
             activity?.finish()
         }
     }
 
     private fun initializeRecyclerView() {
+        mView?.swipe_refresh_layout_articles?.setOnRefreshListener {
+            mPage++
+            callApiArticles(mPage)
+        }
+
         mView?.rv_articles?.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = articlesAdapter
+            adapter = mArticlesAdapter
         }
     }
 
     private fun dismissObeservers() {
-        articlesWebviewDisposse?.dispose()
-        viewModel.stateLiveData.removeObserver(stateObserver)
+        mArticlesWebviewDisposse?.dispose()
+        mViewModel.stateLiveData.removeObserver(stateObserver)
     }
 
     private fun showShimmer (flag: Boolean) {
@@ -107,11 +111,24 @@ class ArticlesFragment : Fragment() {
     }
 
     private fun setupItemClick() {
-        articlesWebviewDisposse = articlesAdapter.clickWebviewButtonEvent
+        mArticlesWebviewDisposse = mArticlesAdapter.clickWebviewButtonEvent
             .subscribe {
-                log.debug { "on click link recycled (webview) -> %it"}
                 startActivity(webviewActivity().getLaunchingIntent(context,it))
             }
+    }
+
+    private fun callApiArticles(page:Int) {
+        mViewModel.getArticles(
+            arguments?.getString(Constants.ARGUMENT_ARTICLES_ID, "") ?: "",
+            page,
+            BuildConfig.API_KEY
+        )
+    }
+
+    private fun saveBundle(): Bundle {
+        val state = Bundle()
+        state.putInt(Constants.ARGUMENT_ARTICLES_PAGE, mPage)
+        return state
     }
     //endregion
 
@@ -123,19 +140,20 @@ class ArticlesFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(ArticlesViewModel::class.java)
-        viewModel.getArticles(arguments?.getString(Constants.ARGUMENT_ARTICLE_ID, "") ?: "", BuildConfig.API_KEY)
+        mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(ArticlesViewModel::class.java)
     }
 
     override fun onResume() {
         super.onResume()
-        viewModel.stateLiveData.observe(this, stateObserver)
+        mViewModel.stateLiveData.observe(this, stateObserver)
         setupItemClick()
+        callApiArticles(mPage)
     }
     override fun onDestroy() {
         super.onDestroy()
         mView?.rv_articles?.adapter = null
         dismissObeservers()
+        mSavedBundle = saveBundle()
     }
 
     override fun onPause() {
@@ -143,9 +161,25 @@ class ArticlesFragment : Fragment() {
         dismissObeservers()
     }
 
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBundle(Constants.ARGUMENT_ARTICLES_PAGE, if (mSavedBundle != null) mSavedBundle else saveBundle())
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        mView = inflater.inflate(R.layout.fragment_articles, container, false)
+        mView = inflater.inflate(com.bbrustol.cmindtest.R.layout.fragment_articles, container, false)
+
+        if(savedInstanceState != null && mSavedBundle == null) {
+            mSavedBundle = savedInstanceState.getBundle(Constants.ARGUMENT_ARTICLES_PAGE)
+        }
+        if(mSavedBundle != null) {
+            mPage = mSavedBundle!!.getInt(Constants.ARGUMENT_ARTICLES_PAGE)
+        }
+        mSavedBundle = null
+
         initializeRecyclerView()
+
         return mView
     }
     //endregion

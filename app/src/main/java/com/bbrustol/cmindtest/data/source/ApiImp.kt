@@ -1,6 +1,5 @@
 package com.bbrustol.cmindtest.data.source
 
-import com.bbrustol.cmindtest.BuildConfig
 import com.bbrustol.cmindtest.data.model.ArticlesModel
 import com.bbrustol.cmindtest.data.model.NewsModel
 import com.bbrustol.cmindtest.data.repository.ArticlesRepository
@@ -12,5 +11,5 @@ class NewsApiImp(private val api: Api) : NewsRepository {
 }
 
 class ArticlesApiImp(private val api: Api) : ArticlesRepository {
-    override fun getArticles(sources: String, apiKey: String): Single<ArticlesModel> = api.getEverything(sources = sources, apiKey = apiKey)
+    override fun getArticles(sources: String, page: Int, apiKey: String): Single<ArticlesModel> = api.getEverything(sources = sources, page = page , apiKey = apiKey)
 }
