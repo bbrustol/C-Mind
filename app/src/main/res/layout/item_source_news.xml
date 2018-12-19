@@ -34,7 +34,7 @@
         android:layout_height="26dp"
         android:text="@string/source_news_item_button_website"
         android:textColor="#00ff00"
-        android:background="@drawable/round_buttons"
+        android:background="@drawable/button_round"
         android:layout_marginTop="10dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"

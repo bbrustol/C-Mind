@@ -2,4 +2,8 @@
     <string name="app_name">C/MIND Test</string>
     <string name="source_news_item_button_website">WEBSITE</string>
     <string name="articles_title">Articles: %s</string>
+    <string name="button_try_again">Try Again</string>
+    <string name="check_your_connection_and_try_again">check your connection and try again!</string>
+    <string name="doesnot_exists_symbol">∄</string>
+    <string name="image_does_not_exists">image does not exists</string>
 </resources>

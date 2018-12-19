@@ -6,20 +6,20 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.bbrustol.cmindtest.BuildConfig
-import com.bbrustol.cmindtest.R
 import com.bbrustol.cmindtest.infrastruture.Constants
 import com.bbrustol.cmindtest.presentation.BaseFragment
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.Disposable
-import kotlinx.android.synthetic.main.fragment_articles.*
 import kotlinx.android.synthetic.main.fragment_articles.view.*
 import kotlinx.android.synthetic.main.include_toolbar.*
 import javax.inject.Inject
+
 
 val ARTICLES_FRAGMENT_TAG = ArticlesFragment::class.java.name
 
@@ -37,6 +37,7 @@ class ArticlesFragment : BaseFragment() {
     private var mView: View? = null
     private var mPage = 1
     private var mSavedBundle: Bundle? = null
+    private var mFlagLoaing = false
 
 
     fun newInstance(id: String): ArticlesFragment {
@@ -55,16 +56,20 @@ class ArticlesFragment : BaseFragment() {
             when (state) {
                 is InitState -> {
                     showShimmer(it.isShimmer)
+                    mFlagLoaing = true
+                    mView?.loading_articles?.visibility = View.VISIBLE
                 }
                 is DefaultState -> {
                     showShimmer(it.isShimmer)
                     configToolbar(it.articles.articles.first().source.name)
                     mArticlesAdapter.updateData(it.articles.articles)
-                    swipe_refresh_layout_articles.isRefreshing = false
+                    mFlagLoaing = false
+                    mView?.loading_articles?.visibility = View.GONE
                 }
                 is ErrorState -> {
                     showShimmer(it.isShimmer)
-                    swipe_refresh_layout_articles.isRefreshing = false
+                    mFlagLoaing = false
+                    mView?.loading_articles?.visibility = View.GONE
                 }
             }
         }
@@ -73,7 +78,7 @@ class ArticlesFragment : BaseFragment() {
     private fun configToolbar(title: String) {
         toolbar.visibility = View.VISIBLE
         toolbar.title = title
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+        toolbar.setNavigationIcon(com.bbrustol.cmindtest.R.drawable.ic_arrow_back_white)
         toolbar.setNavigationOnClickListener {
             mPage = 1
             activity?.finish()
@@ -81,16 +86,33 @@ class ArticlesFragment : BaseFragment() {
     }
 
     private fun initializeRecyclerView() {
-        mView?.swipe_refresh_layout_articles?.setOnRefreshListener {
-            mPage++
-            callApiArticles(mPage)
-        }
-
+        val linearLayoutManager = LinearLayoutManager(context)
         mView?.rv_articles?.apply {
-            layoutManager = LinearLayoutManager(context)
+            layoutManager = linearLayoutManager
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    if (isNearToLastItem(linearLayoutManager) && !mFlagLoaing) {
+                        mFlagLoaing = true
+                        mPage++
+                        callApiArticles(mPage)
+                        mView?.loading_articles?.visibility = View.VISIBLE
+                    }
+                }
+            })
             adapter = mArticlesAdapter
         }
     }
+
+    private fun isNearToLastItem(layoutManager: LinearLayoutManager): Boolean {
+        val visibleItemCount = layoutManager.childCount
+        val totalItemCount = layoutManager.itemCount
+
+        val firstVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
+
+        return visibleItemCount + firstVisibleItemPosition >= totalItemCount && firstVisibleItemPosition >= 0
+    }
+
 
     private fun dismissObeservers() {
         mArticlesWebviewDisposse?.dispose()
@@ -146,6 +168,7 @@ class ArticlesFragment : BaseFragment() {
         mView?.rv_articles?.adapter = null
         dismissObeservers()
         mSavedBundle = saveBundle()
+        mFlagLoaing = false
     }
 
     override fun onPause() {

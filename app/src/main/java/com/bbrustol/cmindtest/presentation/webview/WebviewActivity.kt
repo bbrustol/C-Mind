@@ -61,7 +61,7 @@ class WebviewActivity : AppCompatActivity() {
 
     private fun initToolbar() {
         toolbar.title = getString(R.string.source_news_item_button_website)
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white)
         toolbar.setNavigationOnClickListener { onBackPressed() }
     }
     //endregion

@@ -10,8 +10,6 @@ import android.widget.Toast
 import com.bbrustol.cmindtest.presentation.webview.webviewActivity
 import kotlinx.android.synthetic.main.include_shimmer.*
 
-
-
 open class BaseFragment : Fragment() {
 
     fun showShimmer (flag: Boolean) {
@@ -62,5 +60,7 @@ open class BaseFragment : Fragment() {
             return info != null && info.state == NetworkInfo.State.CONNECTED
         }
     }
+
+
 
 }

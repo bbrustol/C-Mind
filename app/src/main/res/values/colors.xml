@@ -9,4 +9,7 @@
     <color name="chef">#777</color>
     <color name="timestamp">#777</color>
     <color name="bg_error">#4186fe</color>
+    <color name="white">#FFFFFF</color>
+    <color name="button_try_again_color">#539139</color>
+    <color name="button_try_again_stroke_color">#083B0D</color>
 </resources>

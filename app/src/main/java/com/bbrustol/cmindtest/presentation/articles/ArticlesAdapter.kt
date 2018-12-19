@@ -57,18 +57,22 @@ class ArticlesAdapter: RecyclerView.Adapter<ViewHolder>() {
             circularProgressDrawable.centerRadius = 30f
             circularProgressDrawable.start()
 
-            Glide.with(context)
-                .load(articles.urlToImage)
-                .apply(RequestOptions()
-                    .placeholder(circularProgressDrawable)
-                    .error(R.drawable.ic_error_outline_black_24dp)
-                    .centerCrop()
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .skipMemoryCache(true)
-                )
-                .transition(DrawableTransitionOptions.withCrossFade())
-
-                .into(item_everything_articles_thumbnail)
+            if (articles.urlToImage.isNullOrBlank()) {
+                item_everything_articles_thumbnail.visibility = View.GONE
+            }else {
+                item_everything_articles_thumbnail.visibility = View.VISIBLE
+                Glide.with(context)
+                    .load(articles.urlToImage)
+                    .apply(RequestOptions()
+                        .placeholder(circularProgressDrawable)
+                        .error(R.drawable.ic_error_outline_black_24dp)
+                        .centerCrop()
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true)
+                    )
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .into(item_everything_articles_thumbnail)
+            }
         }
     }
 

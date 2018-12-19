@@ -11,25 +11,30 @@
     <android.support.v7.widget.AppCompatImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/ic_sad_cloud"
+        android:background="@drawable/sad_cloud"
         android:scaleX="5"
         android:scaleY="5"
         android:layout_gravity="center"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="@dimen/margin_error"
+        android:layout_marginBottom="@dimen/margin_error"
     />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
-        android:layout_marginTop="100dp"
-        android:textSize="30sp"
-        tools:text="check your connection and try again!"/>
+        android:layout_marginTop="@dimen/margin_error"
+        android:textSize="@dimen/title_size_error"
+        android:layout_marginLeft="@dimen/margin_left_right"
+        android:layout_marginRight="@dimen/margin_left_right"
+        tools:text="@string/check_your_connection_and_try_again"/>
 
-    <Button android:layout_width="wrap_content"
+    <Button
+            android:id="@+id/angry_btn"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="try again"
-            android:layout_marginTop="50dp"
-            android:gravity="center"/>
+            android:text="@string/button_try_again"
+            android:layout_marginTop="@dimen/margin_error"
+            style="@style/ButtonTryAgain"/>
 
 </LinearLayout>

@@ -28,5 +28,8 @@
         <activity android:name=".presentation.articles.ArticlesActivity"
                   android:theme="@style/AppThemeNoActionBar"/>
 
+        <activity android:name=".presentation.error.ErrorActivity"
+                  android:theme="@style/AppThemeNoActionBar"/>
+
     </application>
 </manifest>

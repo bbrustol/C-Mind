@@ -47,8 +47,8 @@ class ArticlesViewModel
     private fun increseArticles(articles: ArticlesModel) {
         if (articles.status == "ok") {
             val articlesModelUpdate = stateLiveData.value?.articles
-            for (model in articles.articles.reversed()) {
-                articlesModelUpdate?.articles?.add(0, model)
+            for (model in articles.articles) {
+                articlesModelUpdate?.articles?.add(model)
             }
 
             stateLiveData.value = DefaultState(articlesModelUpdate!!, false)
