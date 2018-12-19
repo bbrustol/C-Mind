@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_error"
+    android:orientation="vertical"
+    android:gravity="center">
+    
+    <android.support.v7.widget.AppCompatImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_sad_cloud"
+        android:scaleX="5"
+        android:scaleY="5"
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp"
+    />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:layout_marginTop="100dp"
+        android:textSize="30sp"
+        tools:text="check your connection and try again!"/>
+
+    <Button android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="try again"
+            android:layout_marginTop="50dp"
+            android:gravity="center"/>
+
+</LinearLayout>

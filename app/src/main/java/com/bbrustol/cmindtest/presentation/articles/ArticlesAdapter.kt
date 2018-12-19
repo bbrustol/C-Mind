@@ -51,7 +51,7 @@ class ArticlesAdapter: RecyclerView.Adapter<ViewHolder>() {
                 clickWebviewButtonSubject.onNext(articles.url)
             }
 
-            //load image - 
+            //load image
             val circularProgressDrawable = CircularProgressDrawable(context)
             circularProgressDrawable.strokeWidth = 5f
             circularProgressDrawable.centerRadius = 30f

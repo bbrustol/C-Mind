@@ -9,11 +9,11 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.bbrustol.cmindtest.BuildConfig
 import com.bbrustol.cmindtest.R
 import com.bbrustol.cmindtest.infrastruture.Constants
 import com.bbrustol.cmindtest.presentation.BaseFragment
-import com.bbrustol.cmindtest.presentation.webview.webviewActivity
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_articles.*
@@ -100,16 +100,21 @@ class ArticlesFragment : BaseFragment() {
     private fun setupItemClick() {
         mArticlesWebviewDisposse = mArticlesAdapter.clickWebviewButtonEvent
             .subscribe {
-                startActivity(webviewActivity().getLaunchingIntent(context,it))
+                openWebview(it)
             }
     }
 
     private fun callApiArticles(page:Int) {
-        mViewModel.getArticles(
-            arguments?.getString(Constants.ARGUMENT_ARTICLES_ID, "") ?: "",
-            page,
-            BuildConfig.API_KEY
-        )
+        if (checkConnection()) {
+            mViewModel.getArticles(
+                arguments?.getString(Constants.ARGUMENT_ARTICLES_ID, "") ?: "",
+                page,
+                BuildConfig.API_KEY
+            )
+        }else {
+            showShimmer(false)
+            Toast.makeText(context, "Fazer tela de erro", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun saveBundle(): Bundle {

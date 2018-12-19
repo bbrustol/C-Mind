@@ -9,11 +9,11 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.bbrustol.cmindtest.BuildConfig
 import com.bbrustol.cmindtest.R
 import com.bbrustol.cmindtest.presentation.BaseFragment
 import com.bbrustol.cmindtest.presentation.articles.articlesActivity
-import com.bbrustol.cmindtest.presentation.webview.webviewActivity
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_news.view.*
@@ -78,8 +78,7 @@ class NewsFragment : BaseFragment() {
     private fun setupItemClick() {
         newsWebviewDisposse = newsAdapter.clickWebviewButtonEvent
             .subscribe {
-                log.debug { "on click link recycled (webview) -> %it"}
-                startActivity(webviewActivity().getLaunchingIntent(context,it))
+                openWebview(it)
             }
 
         newsItemRecyclerDisposse = newsAdapter.clickItemEvent
@@ -99,13 +98,20 @@ class NewsFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(NewsViewModel::class.java)
-        viewModel.getNews(BuildConfig.API_KEY)
+
     }
 
     override fun onResume() {
         super.onResume()
         viewModel.stateLiveData.observe(this, stateObserver)
         setupItemClick()
+
+        if (checkConnection()) {
+            viewModel.getNews(BuildConfig.API_KEY)
+        }else {
+            showShimmer(false)
+            Toast.makeText(context, "Fazer tela de erro", Toast.LENGTH_SHORT).show()
+        }
     }
     override fun onDestroy() {
         super.onDestroy()
