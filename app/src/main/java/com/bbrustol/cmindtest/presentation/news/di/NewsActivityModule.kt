@@ -13,5 +13,6 @@ abstract class NewsActivityModule {
     @Binds
     @IntoMap
     @ActivityKey(NewsActivity::class)
+
     abstract fun bindNewsActivityInjectorFactory(builder: NewsActivitySubcomponent.Builder): AndroidInjector.Factory<out Activity>
 }

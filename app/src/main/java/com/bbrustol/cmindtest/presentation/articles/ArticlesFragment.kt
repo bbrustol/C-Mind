@@ -24,8 +24,6 @@ import javax.inject.Inject
 
 val ARTICLES_FRAGMENT_TAG = ArticlesFragment::class.java.name
 
-fun articlesFragment() = ArticlesFragment()
-
 class ArticlesFragment : BaseFragment() {
 
     @Inject
@@ -43,7 +41,7 @@ class ArticlesFragment : BaseFragment() {
     private var mFlagLoaing = false
 
 
-    fun newInstance(id: String): ArticlesFragment {
+    fun newInstance(id: String = ""): ArticlesFragment {
         val fragment = ArticlesFragment()
 
         val args = Bundle()
@@ -137,7 +135,7 @@ class ArticlesFragment : BaseFragment() {
     fun callApiArticles(page:Int) {
         if (checkConnection()) {
             mViewModel.getArticles(
-                arguments?.getString(Constants.ARGUMENT_ARTICLES_ID, "") ?: "",
+                getArgumentID(),
                 page,
                 BuildConfig.API_KEY
             )
@@ -151,6 +149,10 @@ class ArticlesFragment : BaseFragment() {
         val state = Bundle()
         state.putInt(Constants.ARGUMENT_ARTICLES_PAGE, mPage)
         return state
+    }
+
+    private fun getArgumentID(): String {
+       return arguments?.getString(Constants.ARGUMENT_ARTICLES_ID, "") ?: ""
     }
     //endregion
 
@@ -169,7 +171,10 @@ class ArticlesFragment : BaseFragment() {
         super.onResume()
         mViewModel.stateLiveData.observe(this, stateObserver)
         setupItemClick()
-        callApiArticles(mPage)
+
+        if (!getArgumentID().isEmpty()) {
+            callApiArticles(mPage)
+        }
     }
     override fun onDestroy() {
         super.onDestroy()
