@@ -9,9 +9,9 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.bbrustol.cmindtest.BuildConfig
 import com.bbrustol.cmindtest.R
+import com.bbrustol.cmindtest.infrastruture.Constants
 import com.bbrustol.cmindtest.presentation.BaseFragment
 import com.bbrustol.cmindtest.presentation.articles.articlesActivity
 import dagger.android.support.AndroidSupportInjection
@@ -78,7 +78,7 @@ class NewsFragment : BaseFragment() {
     private fun setupItemClick() {
         newsWebviewDisposse = newsAdapter.clickWebviewButtonEvent
             .subscribe {
-                openWebview(it)
+                openWebview(it.url, it.url)
             }
 
         newsItemRecyclerDisposse = newsAdapter.clickItemEvent
@@ -110,7 +110,7 @@ class NewsFragment : BaseFragment() {
             viewModel.getNews(BuildConfig.API_KEY)
         }else {
             showShimmer(false)
-            Toast.makeText(context, "Fazer tela de erro", Toast.LENGTH_SHORT).show()
+            internetError(Constants.Error.ARGUMENT_CONNECTION_ERROR)
         }
     }
     override fun onDestroy() {

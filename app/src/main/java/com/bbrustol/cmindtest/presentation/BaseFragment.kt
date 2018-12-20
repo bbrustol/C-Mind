@@ -1,17 +1,19 @@
 package com.bbrustol.cmindtest.presentation
 
 import android.content.Context
+import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.os.Build
 import android.support.v4.app.Fragment
 import android.view.View
-import android.widget.Toast
+import com.bbrustol.cmindtest.R
+import com.bbrustol.cmindtest.infrastruture.Constants
+import com.bbrustol.cmindtest.presentation.error.errorActivity
 import com.bbrustol.cmindtest.presentation.webview.webviewActivity
 import kotlinx.android.synthetic.main.include_shimmer.*
 
 open class BaseFragment : Fragment() {
-
     fun showShimmer (flag: Boolean) {
         if (shimmer_view_container != null) {
             shimmer_view_container.apply {
@@ -26,13 +28,29 @@ open class BaseFragment : Fragment() {
         }
     }
 
-    fun openWebview(url: String) {
+    fun openWebview(url: String, title: String = "") {
         if (checkConnection()) {
-            startActivity(webviewActivity().getLaunchingIntent(context, url))
+            startActivity(webviewActivity().getLaunchingIntent(context, url, title))
         }else {
-            Toast.makeText(context, "Fazer tela de erro", Toast.LENGTH_SHORT).show()
+            internetError(Constants.Error.ARGUMENT_CONNECTION_ERROR)
         }
     }
+
+    fun internetError(requestCode:Int) {
+        startActivityForResult(errorActivity().getLaunchingIntent(
+            context,
+            R.drawable.signal_wifi_off,
+            R.string.check_your_connection_and_try_again),
+        requestCode)
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == Constants.Error.ARGUMENT_CONNECTION_ERROR) {
+        }
+    }
+
 
     @Suppress("DEPRECATION")
     fun checkConnection(): Boolean {
@@ -60,7 +78,4 @@ open class BaseFragment : Fragment() {
             return info != null && info.state == NetworkInfo.State.CONNECTED
         }
     }
-
-
-
 }

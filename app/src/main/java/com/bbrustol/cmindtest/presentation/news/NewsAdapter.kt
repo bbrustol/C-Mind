@@ -5,10 +5,10 @@ import android.support.v7.widget.SimpleItemAnimator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import io.reactivex.Observable
-import io.reactivex.subjects.PublishSubject
 import com.bbrustol.cmindtest.R
 import com.bbrustol.cmindtest.data.model.SourcesModel
+import io.reactivex.Observable
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.item_source_news.view.*
 
 class NewsAdapter: RecyclerView.Adapter<ViewHolder>() {
@@ -16,8 +16,8 @@ class NewsAdapter: RecyclerView.Adapter<ViewHolder>() {
     private var mSourcesList: ArrayList<SourcesModel> = arrayListOf()
     private lateinit var mRecyclerView: RecyclerView
 
-    private val clickWebviewButtonSubject = PublishSubject.create<String>()
-    val clickWebviewButtonEvent: Observable<String> = clickWebviewButtonSubject
+    private val clickWebviewButtonSubject = PublishSubject.create<SourcesModel>()
+    val clickWebviewButtonEvent: Observable<SourcesModel> = clickWebviewButtonSubject
 
     private val clickItemSubject = PublishSubject.create<String>()
     val clickItemEvent: Observable<String> = clickItemSubject
@@ -43,8 +43,9 @@ class NewsAdapter: RecyclerView.Adapter<ViewHolder>() {
         holder.itemView.apply {
             source_news_item_tv_title.text = source.name
             source_news_item_tv_description.text = source.description
+            source_news_item_website.text = source.url
             source_news_item_website.setOnClickListener {
-                clickWebviewButtonSubject.onNext(mSourcesList.get(holder.adapterPosition).url)
+                clickWebviewButtonSubject.onNext(mSourcesList.get(holder.adapterPosition))
             }
 
             setOnClickListener {

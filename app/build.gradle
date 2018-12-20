@@ -84,6 +84,8 @@ dependencies {
 
     //anko
     implementation "org.jetbrains.anko:anko-commons:${rootProject.ext.ankoVersion}"
+    implementation "org.jetbrains.anko:anko-design:${rootProject.ext.ankoVersion}" // For SnackBars
+
 
     //shimmer
     implementation "com.facebook.shimmer:shimmer:${rootProject.ext.shimmerVersion}"

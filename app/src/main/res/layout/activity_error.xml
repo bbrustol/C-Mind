@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_error"
+    android:background="@color/secondaryColor"
     android:orientation="vertical"
     android:gravity="center">
     
     <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/error_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/sad_cloud"
         android:scaleX="5"
         android:scaleY="5"
         android:layout_gravity="center"
@@ -20,6 +20,7 @@
     />
 
     <TextView
+        android:id="@+id/error_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
@@ -30,11 +31,11 @@
         tools:text="@string/check_your_connection_and_try_again"/>
 
     <Button
-            android:id="@+id/angry_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/button_try_again"
-            android:layout_marginTop="@dimen/margin_error"
-            style="@style/ButtonTryAgain"/>
+        android:id="@+id/error_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_try_again"
+        android:layout_marginTop="@dimen/margin_error"
+        style="@style/ButtonTryAgain"/>
 
 </LinearLayout>

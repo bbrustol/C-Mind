@@ -10,18 +10,21 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.bbrustol.cmindtest.BuildConfig
+import com.bbrustol.cmindtest.R
 import com.bbrustol.cmindtest.infrastruture.Constants
 import com.bbrustol.cmindtest.presentation.BaseFragment
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_articles.view.*
 import kotlinx.android.synthetic.main.include_toolbar.*
+import org.jetbrains.anko.design.longSnackbar
 import javax.inject.Inject
 
 
 val ARTICLES_FRAGMENT_TAG = ArticlesFragment::class.java.name
+
+fun articlesFragment() = ArticlesFragment()
 
 class ArticlesFragment : BaseFragment() {
 
@@ -93,10 +96,15 @@ class ArticlesFragment : BaseFragment() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
                     if (isNearToLastItem(linearLayoutManager) && !mFlagLoaing) {
-                        mFlagLoaing = true
-                        mPage++
-                        callApiArticles(mPage)
-                        mView?.loading_articles?.visibility = View.VISIBLE
+                        if (checkConnection()) {
+                            mFlagLoaing = true
+                            mPage++
+                            callApiArticles(mPage)
+                            mView?.loading_articles?.visibility = View.VISIBLE
+                        }else {
+                            showShimmer(false)
+                            longSnackbar(mView!!, R.string.check_your_connection_and_try_again)
+                        }
                     }
                 }
             })
@@ -122,11 +130,11 @@ class ArticlesFragment : BaseFragment() {
     private fun setupItemClick() {
         mArticlesWebviewDisposse = mArticlesAdapter.clickWebviewButtonEvent
             .subscribe {
-                openWebview(it)
+                openWebview(it.url, it.url)
             }
     }
 
-    private fun callApiArticles(page:Int) {
+    fun callApiArticles(page:Int) {
         if (checkConnection()) {
             mViewModel.getArticles(
                 arguments?.getString(Constants.ARGUMENT_ARTICLES_ID, "") ?: "",
@@ -135,7 +143,7 @@ class ArticlesFragment : BaseFragment() {
             )
         }else {
             showShimmer(false)
-            Toast.makeText(context, "Fazer tela de erro", Toast.LENGTH_SHORT).show()
+            internetError(Constants.Error.ARGUMENT_CONNECTION_ERROR)
         }
     }
 

@@ -20,8 +20,8 @@ class ArticlesAdapter: RecyclerView.Adapter<ViewHolder>() {
     private var mArticlesList: ArrayList<EverythingModel> = arrayListOf()
     private lateinit var mRecyclerView: RecyclerView
 
-    private val clickWebviewButtonSubject = PublishSubject.create<String>()
-    val clickWebviewButtonEvent: Observable<String> = clickWebviewButtonSubject
+    private val clickWebviewButtonSubject = PublishSubject.create<EverythingModel>()
+    val clickWebviewButtonEvent: Observable<EverythingModel> = clickWebviewButtonSubject
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
@@ -48,7 +48,7 @@ class ArticlesAdapter: RecyclerView.Adapter<ViewHolder>() {
             item_everything_articles_tv_date.text = articles.publishedAt
 
             setOnClickListener {
-                clickWebviewButtonSubject.onNext(articles.url)
+                clickWebviewButtonSubject.onNext(articles)
             }
 
             //load image

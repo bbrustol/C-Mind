@@ -20,9 +20,10 @@ fun webviewActivity() = WebviewActivity()
 
 class WebviewActivity : AppCompatActivity() {
 
-    fun getLaunchingIntent(context: Context?, url: String): Intent {
+    fun getLaunchingIntent(context: Context?, url: String, title: String): Intent {
         val extras = Bundle()
         extras.putString(Constants.ARGUMENT_WEBVIEW_URL, url)
+        extras.putString(Constants.ARGUMENT_WEBVIEW_NAME, title)
 
         val intent = Intent(context, WebviewActivity::class.java)
         intent.putExtras(extras)
@@ -31,8 +32,8 @@ class WebviewActivity : AppCompatActivity() {
     }
 
     //region private methods
-    private fun getArgumentUrl(): String {
-        return intent.getStringExtra(Constants.ARGUMENT_WEBVIEW_URL)
+    private fun getArguments(argument: String): String {
+        return intent.getStringExtra(argument)
     }
 
     private fun configWebView() {
@@ -56,11 +57,11 @@ class WebviewActivity : AppCompatActivity() {
                 }
             }
         }
-        webView.loadUrl(getArgumentUrl())
+        webView.loadUrl(getArguments(Constants.ARGUMENT_WEBVIEW_URL))
     }
 
     private fun initToolbar() {
-        toolbar.title = getString(R.string.source_news_item_button_website)
+        toolbar.title = getArguments(Constants.ARGUMENT_WEBVIEW_NAME)
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white)
         toolbar.setNavigationOnClickListener { onBackPressed() }
     }

@@ -18,9 +18,9 @@
             android:layout_width="match_parent"
             android:layout_height="270dp"
             android:layout_margin="5dp"
-            tools:background="@color/colorAccent"
             android:visibility="gone"
-            tools:visibility="visible"/>
+            tools:background="@color/primaryLightColor"
+            tools:visibility="gone"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -31,37 +31,42 @@
             android:layout_gravity="center"
             android:background="@drawable/shape_round"
             android:visibility="gone"
-            tools:visibility="visible">
+            tools:visibility="gone">
+
             <android.support.v7.widget.AppCompatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/doesnot_exists_symbol"
                 android:layout_marginTop="10dp"
-                android:textSize="40sp"/>
+                android:textSize="40sp"
+            style="@style/TextviewBold"/>
+
             <android.support.v7.widget.AppCompatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/image_does_not_exists"
                 android:layout_marginBottom="10dp"
                 android:padding="10dp"
-                android:textSize="14sp"/>
+            style="@style/TextviewRegular"/>
+
         </LinearLayout>
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/item_everything_articles_tv_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/TextviewBold"
             android:textSize="20sp"
-            android:textColor="@color/colorPrimary"
-            tools:text="Lorem ipsum dolor it Lorem ipsum dolor it Lorem ipsum dolor it Lorem ipsum dolor it"/>
+            tools:text="Lorem ipsum dolor it"/>
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/item_everything_articles_tv_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:textColor="@color/colorPrimary"
             android:ellipsize="end"
+            style="@style/TextviewRegular"
+            android:textSize="16sp"
             tools:text="Lorem ipsum dolor it ame dsdsdsfsdfsdfsddsfdsfsdfsdfsdf Lorem ipsum dolor it ame dsdsdsfsdfsdfsddsfdsfsdfsdfsdf Lorem ipsum dolor it ame dsdsdsfsdfsdfsddsfdsfsdfsdfsdf Lorem ipsum dolor it ame dsdsdsfsdfsdfsddsfdsfsdfsdfsdf Lorem ipsum dolor it ame dsdsdsfsdfsdfsddsfdsfsdfsdfsdf"/>
 
             <LinearLayout
@@ -74,22 +79,22 @@
                     android:id="@+id/item_everything_articles_tv_author"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:textSize="12sp"
-                    android:textColor="@color/colorPrimary"
                     android:maxLines="1"
                     android:layout_weight=".7"
                     android:ellipsize="end"
+                    style="@style/TextviewRegular"
+                    android:textSize="12sp"
                     tools:text="Bruno B O"/>
 
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/item_everything_articles_tv_date"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:textSize="12sp"
-                    android:textColor="@color/colorPrimary"
                     android:maxLines="1"
                     android:layout_weight=".3"
                     android:gravity="end"
+                    style="@style/TextviewRegular"
+                    android:textSize="12sp"
                     tools:text="22/22/22"/>
 
             </LinearLayout>
