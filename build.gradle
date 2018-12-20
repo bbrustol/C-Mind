@@ -42,6 +42,9 @@ ext {
     shimmerVersion = '0.1.0@aar'
     glideVersion = '4.8.0'
 
+
+    mockitoVersion = '2.10.0'
+    coreTestingVersion = '1.1.1'
     junitVersion = '4.12'
     testRunnerVersion = '1.0.2'
     espressoVersion = '3.0.2'
