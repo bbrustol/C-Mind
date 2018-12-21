@@ -16,7 +16,6 @@ import javax.inject.Singleton
         AndroidSupportInjectionModule::class,
         AppModule::class,
         ActivityBuilder::class,
-//        ViewModelModule::class,
         ProvidesFactory::class
     )
 )
