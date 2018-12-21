@@ -4,9 +4,11 @@ import com.bbrustol.cmindtest.data.ApiService
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
+import javax.inject.Singleton
 
 @Module
-class NewsBusiness: BaseBusiness() {
+class ProvidesFactory: BaseFactory() {
     @Provides
-    fun providesNewsApi(retrofit: Retrofit) = retrofit.create(ApiService::class.java)
+    @Singleton
+    fun providesApi(retrofit: Retrofit) = retrofit.create(ApiService::class.java)
 }

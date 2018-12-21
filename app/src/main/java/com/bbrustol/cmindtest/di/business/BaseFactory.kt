@@ -14,7 +14,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
-open class BaseBusiness {
+open class BaseFactory {
 
     @Provides
     @Singleton

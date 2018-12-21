@@ -9,10 +9,15 @@ import io.reactivex.disposables.CompositeDisposable
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.debug
 import org.jetbrains.anko.warn
+import javax.inject.Inject
+import javax.inject.Named
+import javax.inject.Singleton
 
 private val TAG = NewsViewModel::class.java.name
 
-class NewsViewModel (private val repository: NewsRepository, private val schedulerProvider: SchedulerProvider) {
+@Singleton
+@Named("news")
+class NewsViewModel @Inject constructor(private val repository: NewsRepository, private val schedulerProvider: SchedulerProvider) {
 
     private val log = AnkoLogger(this.javaClass)
 

@@ -7,6 +7,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
+
 class NewsRepository @Inject constructor(private val apiService: ApiService) {
     fun getNews(apiKey:String): Single<NewsModel> = apiService.getSources(apiKey)
 }

@@ -5,15 +5,15 @@ import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.os.Build
-import android.support.v4.app.Fragment
 import android.view.View
 import com.bbrustol.cmindtest.R
 import com.bbrustol.cmindtest.infrastruture.Constants
 import com.bbrustol.cmindtest.presentation.error.errorActivity
 import com.bbrustol.cmindtest.presentation.webview.webviewActivity
+import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.include_shimmer.*
 
-open class BaseFragment : Fragment() {
+open class BaseFragment : DaggerFragment() {
     fun showShimmer (flag: Boolean) {
         if (shimmer_view_container != null) {
             shimmer_view_container.apply {
