@@ -1,4 +1,4 @@
-package com.bbrustol.cmindtest.data.source
+package com.bbrustol.cmindtest.data
 
 import com.bbrustol.cmindtest.BuildConfig
 import com.bbrustol.cmindtest.data.model.ArticlesModel
@@ -14,7 +14,4 @@ interface Api {
 
     @GET(BuildConfig.EVERYTHING)
     fun getEverything(@Query("sources") sources: String, @Query("page")page: Int, @Query("apiKey")apiKey:String): Single<ArticlesModel>
-
-    @GET(BuildConfig.TOP_HEADLINES)
-    fun getTopHeadlines(@Query("apiKey")apiKey:String): Single<ArticlesModel>
 }
