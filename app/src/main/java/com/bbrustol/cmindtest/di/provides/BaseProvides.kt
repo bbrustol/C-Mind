@@ -1,4 +1,4 @@
-package com.bbrustol.cmindtest.di.business
+package com.bbrustol.cmindtest.di.provides
 
 import com.bbrustol.cmindtest.BuildConfig
 import com.bbrustol.cmindtest.infrastruture.SchedulerProvider
@@ -14,7 +14,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
-open class BaseFactory {
+open class BaseProvides {
 
     @Provides
     @Singleton

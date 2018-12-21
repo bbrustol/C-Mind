@@ -2,7 +2,7 @@ package com.bbrustol.cmindtest.di
 
 import android.app.Application
 import com.bbrustol.cmindtest.AppConfiguration
-import com.bbrustol.cmindtest.di.business.ProvidesFactory
+import com.bbrustol.cmindtest.di.provides.ProvidesFactory
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjector

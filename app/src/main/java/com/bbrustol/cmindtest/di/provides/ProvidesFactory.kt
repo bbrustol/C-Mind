@@ -1,4 +1,4 @@
-package com.bbrustol.cmindtest.di.business
+package com.bbrustol.cmindtest.di.provides
 
 import com.bbrustol.cmindtest.data.ApiService
 import dagger.Module
@@ -7,7 +7,7 @@ import retrofit2.Retrofit
 import javax.inject.Singleton
 
 @Module
-class ProvidesFactory: BaseFactory() {
+class ProvidesFactory: BaseProvides() {
     @Provides
     @Singleton
     fun providesApi(retrofit: Retrofit) = retrofit.create(ApiService::class.java)
