@@ -8,7 +8,7 @@ import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface Api {
+interface ApiService {
     @GET(BuildConfig.SOURCES)
     fun getSources(@Query("apiKey")apiKey:String): Single<NewsModel>
 

@@ -1,23 +1,13 @@
 package com.bbrustol.cmindtest.di;
 
+import com.bbrustol.cmindtest.presentation.news.NewsActivity;
+import com.bbrustol.cmindtest.presentation.news.di.NewsActivityModule;
+import com.bbrustol.cmindtest.presentation.news.di.NewsFragmentProvider;
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
-import iammert.com.dagger_android_injection.ui.detail.DetailActivity;
-import iammert.com.dagger_android_injection.ui.detail.DetailActivityModule;
-import iammert.com.dagger_android_injection.ui.detail.DetailFragmentProvider;
-import iammert.com.dagger_android_injection.ui.main.MainActivity;
-import iammert.com.dagger_android_injection.ui.main.MainActivityModule;
 
-/**
- * Created by mertsimsek on 25/05/2017.
- */
 @Module
 public abstract class ActivityBuilder {
-
-    @ContributesAndroidInjector(modules = MainActivityModule.class)
-    abstract MainActivity bindMainActivity();
-
-    @ContributesAndroidInjector(modules = {DetailActivityModule.class, DetailFragmentProvider.class})
-    abstract DetailActivity bindDetailActivity();
-
+    @ContributesAndroidInjector(modules = {NewsActivityModule.class, NewsFragmentProvider.class})
+    abstract NewsActivity bindNewsActivity();
 }

@@ -1,22 +1,12 @@
 package com.bbrustol.cmindtest
 
-import android.app.Activity
-import android.app.Application
-import com.bbrustol.cmindtest.di.DaggerApplicationComponent
+import com.bbrustol.cmindtest.di.DaggerAppComponent
 import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasActivityInjector
-import javax.inject.Inject
 
-class ApplicationConfiguration : Application(), HasActivityInjector {
-
-    @Inject lateinit var dispatchingActivityInjector: DispatchingAndroidInjector<Activity>
-
-    override fun onCreate() {
-        super.onCreate()
-        DaggerApplicationComponent.create()
-            .inject(this)
+class AppConfiguration : dagger.android.DaggerApplication() {
+    override fun applicationInjector(): AndroidInjector<out dagger.android.DaggerApplication> {
+        val appComponent = DaggerAppComponent.builder().application(this).build()
+        appComponent.inject(this)
+        return appComponent
     }
-
-    override fun activityInjector(): AndroidInjector<Activity> = dispatchingActivityInjector
 }

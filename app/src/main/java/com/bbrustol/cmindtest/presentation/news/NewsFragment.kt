@@ -1,8 +1,6 @@
 package com.bbrustol.cmindtest.presentation.news
 
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -27,10 +25,10 @@ val NEWS_FRAGMENT_TAG = NewsFragment::class.java.name
 
 class NewsFragment : BaseFragment() {
 
+//    @Inject
+//    lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    private lateinit var viewModel: NewsViewModel
+    lateinit var viewModel: NewsViewModel
 
     private val log = AnkoLogger(this.javaClass)
 
@@ -70,6 +68,10 @@ class NewsFragment : BaseFragment() {
     }
 
     private fun dismissObeservers() {
+
+        viewModel.compositeDisposable.clear()
+        viewModel.compositeDisposable.dispose()
+
         newsWebviewDisposse?.dispose()
         newsItemRecyclerDisposse?.dispose()
         viewModel.stateLiveData.removeObserver(stateObserver)
@@ -97,7 +99,7 @@ class NewsFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(NewsViewModel::class.java)
+//        viewModel = ViewModelProviders.of(this, viewModelFactory).get(NewsViewModel::class.java)
 
     }
 

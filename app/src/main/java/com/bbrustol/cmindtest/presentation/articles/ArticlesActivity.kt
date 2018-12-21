@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import com.bbrustol.cmindtest.R
 import com.bbrustol.cmindtest.infrastruture.Constants
-import com.bbrustol.cmindtest.infrastruture.replaceFragment
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -43,6 +42,6 @@ class ArticlesActivity : AppCompatActivity(), HasSupportFragmentInjector {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_general)
 
-        if (savedInstanceState == null) replaceFragment(R.id.framelayout_container, ArticlesFragment().newInstance(getArgumentID()), ARTICLES_FRAGMENT_TAG)
+//        if (savedInstanceState == null) replaceFragment(R.id.framelayout_container, ArticlesFragment().newInstance(getArgumentID()), ARTICLES_FRAGMENT_TAG)
     }
 }

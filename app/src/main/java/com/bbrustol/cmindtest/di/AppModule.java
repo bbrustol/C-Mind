@@ -5,9 +5,6 @@ import android.content.Context;
 import dagger.Binds;
 import dagger.Module;
 
-/**
- * Created by mertsimsek on 25/05/2017.
- */
 @Module
 public abstract class AppModule {
 
