@@ -1,7 +1,6 @@
 package com.bbrustol.cmindtest.presentation.articles
 
 import android.arch.lifecycle.MutableLiveData
-import android.util.Log
 import com.bbrustol.cmindtest.data.model.ArticlesModel
 import com.bbrustol.cmindtest.data.model.emptyArticlesModel
 import com.bbrustol.cmindtest.data.repository.ArticlesRepository
@@ -10,8 +9,6 @@ import io.reactivex.disposables.CompositeDisposable
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.debug
 import org.jetbrains.anko.error
-
-private val TAG = ArticlesViewModel::class.java.name
 
 class ArticlesViewModel (private val repository: ArticlesRepository, private val schedulerProvider: SchedulerProvider) {
     private val log = AnkoLogger(this.javaClass)
@@ -38,7 +35,6 @@ class ArticlesViewModel (private val repository: ArticlesRepository, private val
         for (model in articles.articles) {
             articlesModelUpdate.articles.add(model)
         }
-        Log.e("aaaaaa", "${articlesModelUpdate.articles.size}")
     }
 
     private fun onSuccess(articles: ArticlesModel) {

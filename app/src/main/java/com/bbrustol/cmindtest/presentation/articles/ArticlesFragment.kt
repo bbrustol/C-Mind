@@ -61,7 +61,7 @@ class ArticlesFragment : BaseFragment() {
                 is DefaultState -> {
                     showShimmer(it.isShimmer)
                     configToolbar(it.articles.articles.first().source.name)
-                    mArticlesAdapter.updateData(mViewModel.getIncresedArticles()!!)
+                    mArticlesAdapter.updateData(mViewModel.getIncresedArticles())
                     mFlagLoaing = false
                     mView?.loading_articles?.visibility = View.GONE
                 }
@@ -123,6 +123,7 @@ class ArticlesFragment : BaseFragment() {
         mViewModel.compositeDisposable.clear()
         mViewModel.compositeDisposable.dispose()
         mViewModel.articlesModelUpdate = emptyArticlesModel
+        mViewModel.articlesModelUpdate.articles.clear()
 
         mArticlesWebviewDisposse?.dispose()
         mViewModel.stateLiveData.removeObserver(stateObserver)
