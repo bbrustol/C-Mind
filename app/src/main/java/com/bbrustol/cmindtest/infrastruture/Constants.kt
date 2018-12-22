@@ -4,9 +4,9 @@ class Constants private constructor() {
     companion object {
         const val INSTANTIATING_NOT_ALLOWED = "Instantiating not allowed"
         const val ARGUMENT_WEBVIEW_URL = "ARGUMENT_WEBVIEW_URL"
+        const val ARGUMENT_WEBVIEW_NAME = "ARGUMENT_WEBVIEW_NAME"
         const val ARGUMENT_ARTICLES_ID = "ARGUMENT_ARTICLES_ID"
         const val ARGUMENT_ARTICLES_PAGE = "ARGUMENT_ARTICLES_PAGE"
-        const val ARGUMENT_WEBVIEW_NAME = "ARGUMENT_WEBVIEW_NAME"
     }
 
     class Error private constructor() {

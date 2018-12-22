@@ -11,9 +11,9 @@ import dagger.android.ContributesAndroidInjector
 
 @Module
 abstract class ActivityBuilder {
-    @ContributesAndroidInjector(modules = arrayOf(NewsActivityModule::class, NewsFragmentProvider::class))
+    @ContributesAndroidInjector(modules = [NewsActivityModule::class, NewsFragmentProvider::class])
     internal abstract fun bindNewsActivity(): NewsActivity
 
-    @ContributesAndroidInjector(modules = arrayOf(ArticlesActivityModule::class, ArticlesFragmentProvider::class))
+    @ContributesAndroidInjector(modules = [ArticlesActivityModule::class, ArticlesFragmentProvider::class])
     internal abstract fun bindArticlesActivity(): ArticlesActivity
 }

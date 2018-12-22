@@ -1,5 +1,6 @@
 package com.bbrustol.cmindtest.presentation.articles
 
+import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
 import android.content.Context
 import android.os.Bundle
@@ -10,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.bbrustol.cmindtest.BuildConfig
 import com.bbrustol.cmindtest.R
+import com.bbrustol.cmindtest.data.model.emptyArticlesModel
 import com.bbrustol.cmindtest.infrastruture.Constants
 import com.bbrustol.cmindtest.presentation.BaseFragment
 import dagger.android.support.AndroidSupportInjection
@@ -22,12 +24,7 @@ import javax.inject.Inject
 
 val ARTICLES_FRAGMENT_TAG = ArticlesFragment::class.java.name
 
-fun articlesFragment() = ArticlesFragment()
-
 class ArticlesFragment : BaseFragment() {
-
-
-//    lateinit var mViewModelFactory: ViewModelProvider.Factory
 
     @Inject
     lateinit var mViewModel: ArticlesViewModel
@@ -64,7 +61,7 @@ class ArticlesFragment : BaseFragment() {
                 is DefaultState -> {
                     showShimmer(it.isShimmer)
                     configToolbar(it.articles.articles.first().source.name)
-                    mArticlesAdapter.updateData(it.articles.articles)
+                    mArticlesAdapter.updateData(mViewModel.getIncresedArticles()!!)
                     mFlagLoaing = false
                     mView?.loading_articles?.visibility = View.GONE
                 }
@@ -125,6 +122,7 @@ class ArticlesFragment : BaseFragment() {
 
         mViewModel.compositeDisposable.clear()
         mViewModel.compositeDisposable.dispose()
+        mViewModel.articlesModelUpdate = emptyArticlesModel
 
         mArticlesWebviewDisposse?.dispose()
         mViewModel.stateLiveData.removeObserver(stateObserver)
@@ -177,6 +175,7 @@ class ArticlesFragment : BaseFragment() {
     override fun onDestroy() {
         super.onDestroy()
         mView?.rv_articles?.adapter = null
+        mViewModel.stateLiveData = MutableLiveData<ArticlesState>()
         dismissObeservers()
         mSavedBundle = saveBundle()
         mFlagLoaing = false
