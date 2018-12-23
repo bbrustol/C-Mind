@@ -21,7 +21,7 @@ class ArticlesViewModel (private val repository: ArticlesRepository, private val
         stateLiveData.value = InitState(obtainCurrentData(), true)
     }
 
-    private fun getEverything(sources: String, page: Int, apiKey: String) = repository.getArticles(sources, page, apiKey)
+    fun getEverything(sources: String, page: Int, apiKey: String) = repository.getArticles(sources, page, apiKey)
         .compose(schedulerProvider.getSchedulersForSingle())
 
     fun getArticles(sources: String, page: Int, apiKey: String) =

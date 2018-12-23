@@ -29,7 +29,7 @@ class NewsViewModel @Inject constructor(private val repository: NewsRepository, 
         stateLiveData.value = InitState(obtainCurrentData(), true)
     }
 
-    private fun getSources(apiKey: String) = repository.getNews(apiKey)
+    fun getSources(apiKey: String) = repository.getNews(apiKey)
         .compose(schedulerProvider.getSchedulersForSingle())
 
     fun getNews(apiKey: String) {
