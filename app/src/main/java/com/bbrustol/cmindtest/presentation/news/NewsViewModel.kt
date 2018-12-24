@@ -10,11 +10,9 @@ import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.debug
 import org.jetbrains.anko.warn
 import javax.inject.Inject
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-@Named("news")
 class NewsViewModel @Inject constructor(private val repository: NewsRepository, private val schedulerProvider: SchedulerProvider) {
 
     private val log = AnkoLogger(this.javaClass)
