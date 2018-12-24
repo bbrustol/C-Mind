@@ -1,5 +1,6 @@
 package com.bbrustol.cmindtest.data
 
+import android.app.Application
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import com.bbrustol.cmindtest.BaseTest
 import com.bbrustol.cmindtest.data.model.NewsModel
@@ -38,7 +39,7 @@ class NewsViewModelTest: BaseTest() {
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        newsViewModel = NewsViewModel(mockRepository, schedulerProvider)
+        newsViewModel = NewsViewModel(Application(),  mockRepository, schedulerProvider)
     }
 
     @Test

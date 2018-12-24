@@ -1,8 +1,9 @@
 package com.bbrustol.cmindtest.infrastruture
 
 import io.reactivex.*
+import javax.inject.Inject
 
-class SchedulerProvider(val backgroundScheduler: Scheduler, val foregroundScheduler: Scheduler) {
+class SchedulerProvider @Inject constructor (val backgroundScheduler: Scheduler, val foregroundScheduler: Scheduler) {
 
     fun <T> getSchedulersForObservable(): (Observable<T>) -> Observable<T> {
         return { observable: Observable<T> ->

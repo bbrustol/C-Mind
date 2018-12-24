@@ -1,6 +1,8 @@
 package com.bbrustol.cmindtest.presentation.news
 
 import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProvider
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -28,8 +30,10 @@ val NEWS_FRAGMENT_TAG = NewsFragment::class.java.name
 
 class NewsFragment : BaseFragment() {
 
-    @Inject
     lateinit var mViewModel: NewsViewModel
+
+    @Inject
+    lateinit var mViewModelFactory: ViewModelProvider.Factory
 
     private val mLog = AnkoLogger(this.javaClass)
 
@@ -150,6 +154,9 @@ class NewsFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mView = inflater.inflate(R.layout.fragment_news, container, false)
+
+        mViewModel = ViewModelProviders.of(this, mViewModelFactory
+        )[NewsViewModel::class.java]
 
         initializeRecyclerView()
         mFlagFirst = true

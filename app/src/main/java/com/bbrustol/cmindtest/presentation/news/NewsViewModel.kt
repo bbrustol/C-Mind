@@ -1,5 +1,7 @@
 package com.bbrustol.cmindtest.presentation.news
 
+import android.app.Application
+import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.MutableLiveData
 import com.bbrustol.cmindtest.data.model.NewsModel
 import com.bbrustol.cmindtest.data.model.emptyNewsModel
@@ -13,7 +15,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class NewsViewModel @Inject constructor(private val repository: NewsRepository, private val schedulerProvider: SchedulerProvider) {
+class NewsViewModel @Inject constructor(application: Application, private val repository: NewsRepository, private val schedulerProvider: SchedulerProvider): AndroidViewModel(application) {
 
     private val log = AnkoLogger(this.javaClass)
 

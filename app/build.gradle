@@ -11,8 +11,8 @@ android {
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
-//        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunner "com.bbrustol.cmindtest.testutil.CustomTestRunner"
+//        testInstrumentationRunner "com.bbrustol.cmindtest.testutil.CustomTestRunner"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         buildConfigField("String", "ROUTER_URL", "\"https://newsapi.org/v2/\"")
         buildConfigField("String", "SOURCES", "\"sources\"")
