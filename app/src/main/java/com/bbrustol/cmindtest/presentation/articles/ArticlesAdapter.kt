@@ -59,8 +59,10 @@ class ArticlesAdapter: RecyclerView.Adapter<ViewHolder>() {
 
             if (articles.urlToImage.isNullOrBlank()) {
                 item_everything_articles_thumbnail.visibility = View.GONE
+                item_everything_articles_without_image.visibility = View.VISIBLE
             }else {
                 item_everything_articles_thumbnail.visibility = View.VISIBLE
+                item_everything_articles_without_image.visibility = View.GONE
                 Glide.with(context)
                     .load(articles.urlToImage)
                     .apply(RequestOptions()

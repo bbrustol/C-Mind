@@ -1,9 +1,9 @@
 package com.bbrustol.cmindtest.presentation.articles
 
+import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.bbrustol.cmindtest.BuildConfig
 import com.bbrustol.cmindtest.R
+import com.bbrustol.cmindtest.data.model.emptyArticlesModel
 import com.bbrustol.cmindtest.infrastruture.Constants
 import com.bbrustol.cmindtest.presentation.BaseFragment
 import dagger.android.support.AndroidSupportInjection
@@ -27,9 +28,7 @@ val ARTICLES_FRAGMENT_TAG = ArticlesFragment::class.java.name
 class ArticlesFragment : BaseFragment() {
 
     @Inject
-    lateinit var mViewModelFactory: ViewModelProvider.Factory
-
-    private lateinit var mViewModel: ArticlesViewModel
+    lateinit var mViewModel: ArticlesViewModel
 
     private val mArticlesAdapter by lazy { ArticlesAdapter() }
 
@@ -41,11 +40,12 @@ class ArticlesFragment : BaseFragment() {
     private var mFlagLoaing = false
 
 
-    fun newInstance(id: String = ""): ArticlesFragment {
+    fun newInstance(id: String = "", flagToolbar: Boolean = true): ArticlesFragment {
         val fragment = ArticlesFragment()
 
         val args = Bundle()
         args.putString(Constants.ARGUMENT_ARTICLES_ID, id)
+        args.putBoolean(Constants.ARGUMENT_ARTICLES_FLAG_TOOLBAR, flagToolbar)
         fragment.arguments = args
 
         return fragment
@@ -63,7 +63,7 @@ class ArticlesFragment : BaseFragment() {
                 is DefaultState -> {
                     showShimmer(it.isShimmer)
                     configToolbar(it.articles.articles.first().source.name)
-                    mArticlesAdapter.updateData(it.articles.articles)
+                    mArticlesAdapter.updateData(mViewModel.getIncresedArticles())
                     mFlagLoaing = false
                     mView?.loading_articles?.visibility = View.GONE
                 }
@@ -77,12 +77,14 @@ class ArticlesFragment : BaseFragment() {
     }
 
     private fun configToolbar(title: String) {
-        toolbar.visibility = View.VISIBLE
-        toolbar.title = title
-        toolbar.setNavigationIcon(com.bbrustol.cmindtest.R.drawable.ic_arrow_back_white)
-        toolbar.setNavigationOnClickListener {
-            mPage = 1
-            activity?.finish()
+        if (getArgumentFlagToolBar()) {
+            toolbar.visibility = View.VISIBLE
+            toolbar.title = title
+            toolbar.setNavigationIcon(com.bbrustol.cmindtest.R.drawable.ic_arrow_back_white)
+            toolbar.setNavigationOnClickListener {
+                mPage = 1
+                activity?.finish()
+            }
         }
     }
 
@@ -121,6 +123,12 @@ class ArticlesFragment : BaseFragment() {
 
 
     private fun dismissObeservers() {
+
+        mViewModel.compositeDisposable.clear()
+        mViewModel.compositeDisposable.dispose()
+        mViewModel.articlesModelUpdate = emptyArticlesModel
+        mViewModel.articlesModelUpdate.articles.clear()
+
         mArticlesWebviewDisposse?.dispose()
         mViewModel.stateLiveData.removeObserver(stateObserver)
     }
@@ -154,6 +162,10 @@ class ArticlesFragment : BaseFragment() {
     private fun getArgumentID(): String {
        return arguments?.getString(Constants.ARGUMENT_ARTICLES_ID, "") ?: ""
     }
+
+    private fun getArgumentFlagToolBar(): Boolean {
+        return arguments?.getBoolean(Constants.ARGUMENT_ARTICLES_FLAG_TOOLBAR, true) ?: true
+    }
     //endregion
 
     //region override methods
@@ -164,13 +176,26 @@ class ArticlesFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(ArticlesViewModel::class.java)
+//        mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(ArticlesViewModel::class.java)
     }
 
     override fun onResume() {
         super.onResume()
         mViewModel.stateLiveData.observe(this, stateObserver)
         setupItemClick()
+
+        if (getArgumentFlagToolBar()) {
+            toolbar.visibility = View.VISIBLE
+
+            val orientation = activity?.resources?.configuration?.orientation
+            if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                mPage = 1
+                activity?.finish()
+            }
+
+        }else {
+            toolbar.visibility = View.GONE
+        }
 
         if (!getArgumentID().isEmpty()) {
             callApiArticles(mPage)
@@ -179,6 +204,7 @@ class ArticlesFragment : BaseFragment() {
     override fun onDestroy() {
         super.onDestroy()
         mView?.rv_articles?.adapter = null
+        mViewModel.stateLiveData = MutableLiveData<ArticlesState>()
         dismissObeservers()
         mSavedBundle = saveBundle()
         mFlagLoaing = false
@@ -205,6 +231,7 @@ class ArticlesFragment : BaseFragment() {
             mPage = mSavedBundle!!.getInt(Constants.ARGUMENT_ARTICLES_PAGE)
         }
         mSavedBundle = null
+
 
         initializeRecyclerView()
 

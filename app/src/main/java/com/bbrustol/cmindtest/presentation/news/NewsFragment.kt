@@ -1,8 +1,6 @@
 package com.bbrustol.cmindtest.presentation.news
 
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -13,9 +11,12 @@ import com.bbrustol.cmindtest.BuildConfig
 import com.bbrustol.cmindtest.R
 import com.bbrustol.cmindtest.infrastruture.Constants
 import com.bbrustol.cmindtest.presentation.BaseFragment
+import com.bbrustol.cmindtest.presentation.articles.ARTICLES_FRAGMENT_TAG
+import com.bbrustol.cmindtest.presentation.articles.ArticlesFragment
 import com.bbrustol.cmindtest.presentation.articles.articlesActivity
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.Disposable
+import kotlinx.android.synthetic.main.activity_general.*
 import kotlinx.android.synthetic.main.fragment_news.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.debug
@@ -28,35 +29,40 @@ val NEWS_FRAGMENT_TAG = NewsFragment::class.java.name
 class NewsFragment : BaseFragment() {
 
     @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+    lateinit var mViewModel: NewsViewModel
 
-    private lateinit var viewModel: NewsViewModel
+    private val mLog = AnkoLogger(this.javaClass)
 
-    private val log = AnkoLogger(this.javaClass)
+    private val mNewsAdapter by lazy { NewsAdapter() }
 
-    private val newsAdapter by lazy { NewsAdapter() }
+    private var mFlagFirst = true
 
     private var mView: View? = null
 
-    private var newsWebviewDisposse: Disposable? = null
-    private var newsItemRecyclerDisposse: Disposable? = null
+    private var mNewsWebviewDisposse: Disposable? = null
+    private var mNewsItemRecyclerDisposse: Disposable? = null
 
     //region private methods
     private val stateObserver = Observer<NewsState> { state ->
         state?.let {
             when (state) {
                 is InitState -> {
-                    showShimmer(viewModel.stateLiveData.value!!.isShimmer)
-                    log.debug { "init -> " + viewModel.stateLiveData.value!!.isShimmer }
+                    showShimmer(mViewModel.stateLiveData.value!!.isShimmer)
+                    mLog.debug { "init -> " + mViewModel.stateLiveData.value!!.isShimmer }
                 }
                 is DefaultState -> {
-                    showShimmer(viewModel.stateLiveData.value!!.isShimmer)
-                    log.warn { "default -> " +  viewModel.stateLiveData.value!!.isShimmer }
-                    newsAdapter.updateData(it.news.sources)
+                    showShimmer(mViewModel.stateLiveData.value!!.isShimmer)
+                    mLog.warn { "default -> " +  mViewModel.stateLiveData.value!!.isShimmer }
+                    mNewsAdapter.updateData(it.news.sources)
+
+                    if (mFlagFirst && activity?.linear_dual_pane != null) {
+                        replaceFragment(it.news.sources[0].id)
+                    }
+                    mFlagFirst = false
                 }
                 is ErrorState -> {
-                    showShimmer(viewModel.stateLiveData.value!!.isShimmer)
-                    log.error { "error -> " +  viewModel.stateLiveData.value }
+                    showShimmer(mViewModel.stateLiveData.value!!.isShimmer)
+                    mLog.error { "error -> " +  mViewModel.stateLiveData.value }
                 }
             }
         }
@@ -65,27 +71,51 @@ class NewsFragment : BaseFragment() {
     private fun initializeRecyclerView() {
         mView?.rv_news?.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = newsAdapter
+            adapter = mNewsAdapter
         }
     }
 
     private fun dismissObeservers() {
-        newsWebviewDisposse?.dispose()
-        newsItemRecyclerDisposse?.dispose()
-        viewModel.stateLiveData.removeObserver(stateObserver)
+
+        mViewModel.compositeDisposable.clear()
+        mViewModel.compositeDisposable.dispose()
+
+        mNewsWebviewDisposse?.dispose()
+        mNewsItemRecyclerDisposse?.dispose()
+        mViewModel.stateLiveData.removeObserver(stateObserver)
     }
 
     private fun setupItemClick() {
-        newsWebviewDisposse = newsAdapter.clickWebviewButtonEvent
+        mNewsWebviewDisposse = mNewsAdapter.clickWebviewButtonEvent
             .subscribe {
                 openWebview(it.url, it.url)
             }
 
-        newsItemRecyclerDisposse = newsAdapter.clickItemEvent
+        mNewsItemRecyclerDisposse = mNewsAdapter.clickItemEvent
             .subscribe {
-                log.debug { "on click item recycled -> %it"}
-                startActivity(articlesActivity().getLaunchingIntent(context, it))
+                verifyScreen(it)
             }
+    }
+
+    private fun verifyScreen(it: String) {
+        if (activity?.linear_dual_pane != null) {
+            replaceFragment(it)
+        }else {
+            mLog.debug { "on click item recycled -> %it"}
+            startActivity(articlesActivity().getLaunchingIntent(context, it))
+        }
+    }
+
+    private fun replaceFragment(it: String) {
+        activity
+            ?.supportFragmentManager
+            ?.beginTransaction()
+            ?.replace(
+                R.id.framelayout_articles,
+                ArticlesFragment().newInstance(it, false),
+                ARTICLES_FRAGMENT_TAG
+            )
+            ?.commit()
     }
     //endregion
 
@@ -95,19 +125,13 @@ class NewsFragment : BaseFragment() {
         super.onAttach(context)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(NewsViewModel::class.java)
-
-    }
-
     override fun onResume() {
         super.onResume()
-        viewModel.stateLiveData.observe(this, stateObserver)
+        mViewModel.stateLiveData.observe(this, stateObserver)
         setupItemClick()
 
         if (checkConnection()) {
-            viewModel.getNews(BuildConfig.API_KEY)
+            mViewModel.getNews(BuildConfig.API_KEY)
         }else {
             showShimmer(false)
             internetError(Constants.Error.ARGUMENT_CONNECTION_ERROR)
@@ -126,7 +150,9 @@ class NewsFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mView = inflater.inflate(R.layout.fragment_news, container, false)
+
         initializeRecyclerView()
+        mFlagFirst = true
         return mView
     }
     //endregion

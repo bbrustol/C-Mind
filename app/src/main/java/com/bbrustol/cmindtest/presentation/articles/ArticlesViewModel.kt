@@ -1,58 +1,46 @@
 package com.bbrustol.cmindtest.presentation.articles
 
-import android.annotation.SuppressLint
 import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
 import com.bbrustol.cmindtest.data.model.ArticlesModel
-import com.bbrustol.cmindtest.data.model.ArticlesUseCases
 import com.bbrustol.cmindtest.data.model.emptyArticlesModel
-import com.bbrustol.cmindtest.di.SCHEDULER_IO
-import com.bbrustol.cmindtest.di.SCHEDULER_MAIN_THREAD
-import io.reactivex.Scheduler
+import com.bbrustol.cmindtest.data.repository.ArticlesRepository
+import com.bbrustol.cmindtest.infrastruture.SchedulerProvider
+import io.reactivex.disposables.CompositeDisposable
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.debug
 import org.jetbrains.anko.error
-import javax.inject.Inject
-import javax.inject.Named
 
-private val TAG = ArticlesViewModel::class.java.name
-
-class ArticlesViewModel
-@Inject constructor(private val articlesUseCases: ArticlesUseCases, @Named(SCHEDULER_IO) val subscribeOnScheduler:Scheduler, @Named(
-    SCHEDULER_MAIN_THREAD
-) val observeOnScheduler: Scheduler) : ViewModel() {
-
+class ArticlesViewModel (private val repository: ArticlesRepository, private val schedulerProvider: SchedulerProvider) {
     private val log = AnkoLogger(this.javaClass)
+    var articlesModelUpdate: ArticlesModel = emptyArticlesModel
 
-    val stateLiveData =  MutableLiveData<ArticlesState>()
+    val compositeDisposable by lazy { CompositeDisposable() }
+    var stateLiveData = MutableLiveData<ArticlesState>()
 
     init {
         stateLiveData.value = InitState(obtainCurrentData(), true)
     }
 
-    @SuppressLint("CheckResult")
-    fun getArticles(sources: String, page: Int, apiKey: String) {
-        articlesUseCases.getArticles(sources, page, apiKey)
-            .subscribeOn(subscribeOnScheduler)
-            .observeOn(observeOnScheduler)
-            .subscribe(this::onSuccess, this::onError)
-    }
+    fun getEverything(sources: String, page: Int, apiKey: String) = repository.getArticles(sources, page, apiKey)
+        .compose(schedulerProvider.getSchedulersForSingle())
+
+    fun getArticles(sources: String, page: Int, apiKey: String) =
+        compositeDisposable.add(getEverything(sources, page, apiKey)
+            .subscribe(this::onSuccess, this::onError))
+
+    fun getIncresedArticles() = articlesModelUpdate.articles
 
     //region private methods
+    private fun increseArticles(articles: ArticlesModel) {
+        for (model in articles.articles) {
+            articlesModelUpdate.articles.add(model)
+        }
+    }
+
     private fun onSuccess(articles: ArticlesModel) {
         log.debug { articles.toString() }
         increseArticles(articles)
-    }
-
-    private fun increseArticles(articles: ArticlesModel) {
-        if (articles.status == "ok") {
-            val articlesModelUpdate = stateLiveData.value?.articles
-            for (model in articles.articles) {
-                articlesModelUpdate?.articles?.add(model)
-            }
-
-            stateLiveData.value = DefaultState(articlesModelUpdate!!, false)
-        }
+        stateLiveData.value = DefaultState(articles, false)
     }
 
     private fun onError(error: Throwable) {

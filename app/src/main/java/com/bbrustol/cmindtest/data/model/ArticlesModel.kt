@@ -1,19 +1,16 @@
 package com.bbrustol.cmindtest.data.model
 
 import android.os.Parcelable
-import io.reactivex.Single
 import kotlinx.android.parcel.Parcelize
 
-interface ArticlesUseCases {
-    fun getArticles(sources: String, page: Int, apiKey1: String) : Single<ArticlesModel>
-}
-
-val emptyArticlesModel= ArticlesModel("", "", arrayListOf())
+val emptyArticlesModel= ArticlesModel("", "","","", arrayListOf())
 
 @Parcelize
 data class ArticlesModel(
     val status: String,
     val totalResults: String,
+    val code: String,
+    val message: String,
     val articles: ArrayList<EverythingModel>) : Parcelable
 
 @Parcelize
