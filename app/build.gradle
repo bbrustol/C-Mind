@@ -99,14 +99,14 @@ dependencies {
     annotationProcessor "com.github.bumptech.glide:compiler:${rootProject.ext.glideVersion}"
 
     //tests
-//    testImplementation "org.mockito:mockito-core:${rootProject.ext.mockitoVersion}"
+    testImplementation "org.mockito:mockito-core:${rootProject.ext.mockitoVersion}"
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:${rootProject.ext.mockitoKotlinVersion}"
     androidTestImplementation "org.mockito:mockito-android:${rootProject.ext.mockitoVersion}"
 
     testImplementation "android.arch.core:core-testing:${rootProject.ext.coreTestingVersion}"
     testImplementation "junit:junit:${rootProject.ext.junitVersion}"
 
-//    androidTestImplementation "com.android.support.test:runner:${rootProject.ext.testRunnerVersion}"
+    androidTestImplementation "com.android.support.test:runner:${rootProject.ext.testRunnerVersion}"
     androidTestImplementation "com.android.support.test:rules:${rootProject.ext.testRulesVersion}"
     androidTestImplementation ("com.android.support.test.espresso:espresso-core:${rootProject.ext.espressoVersion}",{
         exclude group: 'com.android.support', module: 'support-annotations'
