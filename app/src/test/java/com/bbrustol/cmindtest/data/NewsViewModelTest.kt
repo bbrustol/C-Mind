@@ -39,7 +39,7 @@ class NewsViewModelTest: BaseTest() {
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        newsViewModel = NewsViewModel(Application(),  mockRepository, schedulerProvider)
+        newsViewModel = NewsViewModel(mockRepository, schedulerProvider)
     }
 
     @Test

@@ -1,7 +1,6 @@
 package com.bbrustol.cmindtest.presentation.fragments
 
 import android.content.Intent
-import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.Espresso
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.assertion.ViewAssertions
@@ -10,13 +9,12 @@ import android.support.test.espresso.matcher.RootMatchers.withDecorView
 import android.support.test.espresso.matcher.ViewMatchers
 import android.support.test.espresso.matcher.ViewMatchers.isDisplayed
 import android.support.test.rule.ActivityTestRule
+import android.support.test.runner.AndroidJUnit4
 import android.support.v7.widget.RecyclerView
 import com.bbrustol.cmindtest.R
-import com.bbrustol.cmindtest.TestApp
 import com.bbrustol.cmindtest.data.model.NewsModel
 import com.bbrustol.cmindtest.data.repository.NewsRepository
 import com.bbrustol.cmindtest.infrastruture.SchedulerProvider
-import com.bbrustol.cmindtest.mocks.di.BaseTest
 import com.bbrustol.cmindtest.presentation.news.NewsActivity
 import com.bbrustol.cmindtest.presentation.news.NewsViewModel
 import com.bbrustol.cmindtest.testutil.RecyclerViewMatcher
@@ -29,6 +27,7 @@ import org.hamcrest.Matchers
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import java.io.BufferedReader
@@ -37,7 +36,8 @@ import java.io.Reader
 import java.lang.reflect.Type
 import org.mockito.Mockito.`when` as whenever
 
-class NewsFragmentTest: BaseTest() {
+@RunWith(AndroidJUnit4::class)
+class NewsFragmentTest {
 
     @Rule
     @JvmField
@@ -45,8 +45,6 @@ class NewsFragmentTest: BaseTest() {
 
     @Mock
     private lateinit var mockNewsRepository: NewsRepository
-
-    private lateinit var testAppInstance: TestApp
 
     private lateinit var mockNewsViewModel: NewsViewModel
 
@@ -59,13 +57,15 @@ class NewsFragmentTest: BaseTest() {
 
     @Before
     fun setUp() {
-        testAppInstance = InstrumentationRegistry.getTargetContext().applicationContext as TestApp
+//        testConfigurationInstance = InstrumentationRegistry.getTargetContext().applicationContext as TestConfiguration
 
-        MockitoAnnotations.initMocks(this)
+         MockitoAnnotations.initMocks(this)
 
-        mockNewsViewModel = NewsViewModel(testAppInstance, mockNewsRepository, schedulerProvider)
+        mockNewsViewModel = NewsViewModel(mockNewsRepository, schedulerProvider)
 
-        viewModelFactory.viewModels[NewsViewModel::class.java] = mockNewsViewModel
+//        viewModelFactory.viewModels[NewsViewModel::class.java] = mockNewsViewModel
+
+//        Buscar por viewModelFactoryModel Mock para mockito
 
 //        TestInjector(TestApplicationModule(mockNewsViewModel)).inject()
     }

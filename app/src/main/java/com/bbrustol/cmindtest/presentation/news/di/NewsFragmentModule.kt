@@ -10,5 +10,5 @@ import dagger.Provides
 @Module
 class NewsFragmentModule{
     @Provides
-    fun provideViewModel(application: Application, repository: NewsRepository, schedulerProvider: SchedulerProvider) = NewsViewModel(application, repository, schedulerProvider)
+    fun provideViewModel(repository: NewsRepository, schedulerProvider: SchedulerProvider) = NewsViewModel(repository, schedulerProvider)
 }

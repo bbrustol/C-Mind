@@ -3,10 +3,11 @@ package com.bbrustol.cmindtest.testutil
 import android.app.Application
 import android.content.Context
 import android.support.test.runner.AndroidJUnitRunner
+import com.github.tmurakami.dexopener.DexOpener
 
-class CustomTestRunner : AndroidJUnitRunner() {
-
+class CustomTestRunner: AndroidJUnitRunner() {
     override fun newApplication(cl: ClassLoader?, className: String?, context: Context?): Application {
-        return super.newApplication(cl, TestApplication::class.java.name, context)
+        DexOpener.install(this)
+        return super.newApplication(cl, className, context)
     }
 }

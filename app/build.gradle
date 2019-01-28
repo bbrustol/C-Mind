@@ -11,8 +11,8 @@ android {
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
-//        testInstrumentationRunner "com.bbrustol.cmindtest.testutil.CustomTestRunner"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.bbrustol.cmindtest.testutil.CustomTestRunner"
+//        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         buildConfigField("String", "ROUTER_URL", "\"https://newsapi.org/v2/\"")
         buildConfigField("String", "SOURCES", "\"sources\"")
@@ -55,6 +55,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
+
     implementation "com.android.support:appcompat-v7:$appcompactVersion"
     implementation "com.android.support.constraint:constraint-layout:${rootProject.ext.constraintLayoutVersion}"
 
@@ -63,6 +64,7 @@ dependencies {
     implementation "com.google.dagger:dagger-android-support:${rootProject.ext.daggerSupportVersion}"
     kapt "com.google.dagger:dagger-compiler:${rootProject.ext.daggerVersion}"
     kapt "com.google.dagger:dagger-android-processor:${rootProject.ext.daggerVersion}"
+    kaptAndroidTest "com.google.dagger:dagger-compiler:${rootProject.ext.daggerVersion}"
 
     //retrofit
     implementation "com.squareup.retrofit2:retrofit:${rootProject.ext.retrofitVersion}"
@@ -101,16 +103,20 @@ dependencies {
     //tests
     testImplementation "org.mockito:mockito-core:${rootProject.ext.mockitoVersion}"
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:${rootProject.ext.mockitoKotlinVersion}"
-    androidTestImplementation "org.mockito:mockito-android:${rootProject.ext.mockitoVersion}"
-
     testImplementation "android.arch.core:core-testing:${rootProject.ext.coreTestingVersion}"
     testImplementation "junit:junit:${rootProject.ext.junitVersion}"
+
+    androidTestImplementation 'com.github.tmurakami:dexopener:2.0.0'
 
     androidTestImplementation "com.android.support.test:runner:${rootProject.ext.testRunnerVersion}"
     androidTestImplementation "com.android.support.test:rules:${rootProject.ext.testRulesVersion}"
     androidTestImplementation ("com.android.support.test.espresso:espresso-core:${rootProject.ext.espressoVersion}",{
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+
+    androidTestImplementation "junit:junit:${rootProject.ext.junitVersion}"
+    androidTestImplementation "org.mockito:mockito-android:${rootProject.ext.mockitoVersion}"
+    androidTestImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:${rootProject.ext.mockitoKotlinVersion}"
 
     androidTestImplementation("com.android.support.test.espresso:espresso-contrib:${rootProject.ext.espressoVersion}") {
         // Necessary to avoid version conflicts
@@ -120,5 +126,12 @@ dependencies {
         exclude module: 'recyclerview-v7'
     }
 
-    kaptAndroidTest "com.google.dagger:dagger-compiler:${rootProject.ext.daggerVersion}"
+
+    androidTestImplementation('com.nhaarman:mockito-kotlin-kt1.1:1.5.0') {
+        exclude group: 'org.jetbrains.kotlin'
+    }
+    androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0-alpha4') {
+        exclude group: 'javax.inject', module: 'javax.inject'
+        exclude group: 'com.squareup', module: 'javawriter'
+    }
 }
